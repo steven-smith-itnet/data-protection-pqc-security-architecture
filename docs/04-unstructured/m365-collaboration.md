@@ -218,12 +218,15 @@ The loyalty member number is C2 on its own and identifies a guest. It is a ten-d
 
 Custom SITs can be created in the Purview portal (regex, keywords, supporting elements, and validators) or uploaded as an XML rule package. The rule package form is kept in source control:
 
+{: .note }
+This XML is an illustrative documentation template. `EXAMPLE_RULEPACK_UUID`, `EXAMPLE_PUBLISHER_UUID`, and `EXAMPLE_ENTITY_UUID` are fictitious identifier placeholders, not secrets or access tokens. Before importing a package, replace each with a unique GUID generated for your organization, for example with PowerShell `[guid]::NewGuid().ToString()`. Use the same entity GUID in both `Entity` and its `Resource` reference. The template cannot be imported unchanged.
+
 ```xml
 <?xml version="1.0" encoding="utf-16"?>
 <RulePackage xmlns="http://schemas.microsoft.com/office/2011/mce">
-  <RulePack id="4b5e0b3a-2f1c-4d8e-9a6b-1f2d3c4b5a60">
+  <RulePack id="EXAMPLE_RULEPACK_UUID">
     <Version major="1" minor="0" build="0" revision="0"/>
-    <Publisher id="9c8d7e6f-5a4b-4c3d-8e2f-1a0b9c8d7e6f"/>
+    <Publisher id="EXAMPLE_PUBLISHER_UUID"/>
     <Details defaultLangCode="en-us">
       <LocalizedDetails langcode="en-us">
         <PublisherName>Information Protection Engineering</PublisherName>
@@ -233,7 +236,7 @@ Custom SITs can be created in the Purview portal (regex, keywords, supporting el
     </Details>
   </RulePack>
   <Rules>
-    <Entity id="d1a2b3c4-e5f6-4a7b-8c9d-0e1f2a3b4c5d" patternsProximity="300" recommendedConfidence="85">
+    <Entity id="EXAMPLE_ENTITY_UUID" patternsProximity="300" recommendedConfidence="85">
       <Pattern confidenceLevel="85">
         <IdMatch idRef="Regex_loyalty_number"/>
         <Match idRef="Keyword_loyalty"/>
@@ -259,7 +262,7 @@ Custom SITs can be created in the Purview portal (regex, keywords, supporting el
       </Group>
     </Keyword>
     <LocalizedStrings>
-      <Resource idRef="d1a2b3c4-e5f6-4a7b-8c9d-0e1f2a3b4c5d">
+      <Resource idRef="EXAMPLE_ENTITY_UUID">
         <Name default="true" langcode="en-us">Loyalty Member Number</Name>
         <Description default="true" langcode="en-us">Ten-digit loyalty member number with check digit</Description>
       </Resource>
