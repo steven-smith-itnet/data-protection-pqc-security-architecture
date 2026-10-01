@@ -1,0 +1,348 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:dd9a1615-ae56-41f7-9a3c-93bd95881eea",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-09-30T22:32:52+00:00",
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "name": "cbom_scan",
+          "version": "1.0.0",
+          "description": "TLS and certificate CBOM scanner using OpenSSL 3.5.5 27 Jan 2026 (Library: OpenSSL 3.5.5 27 Jan 2026)"
+        }
+      ]
+    },
+    "properties": [
+      {
+        "name": "cbom:quantum-vulnerable-assets",
+        "value": "RSA-3072, X25519, rsa_pss_rsae_sha256, sha256WithRSAEncryption"
+      },
+      {
+        "name": "cbom:finding-count",
+        "value": "5"
+      },
+      {
+        "name": "cbom:finding:1",
+        "value": "[medium] 127.0.0.1:14436 TLS 1.2: TLS 1.3 not negotiated. Action: Prefer TLS 1.3; hybrid ML-KEM groups are defined for TLS 1.3 only."
+      },
+      {
+        "name": "cbom:finding:2",
+        "value": "[high] 127.0.0.1:14436 X25519: Classical key exchange: recorded sessions are exposed to harvest now, decrypt later. Action: Enable hybrid X25519MLKEM768 on this endpoint (OpenSSL 3.5+, or the provider's PQ TLS policy)."
+      },
+      {
+        "name": "cbom:finding:3",
+        "value": "[medium] 127.0.0.1:14436 rsa_pss_rsae_sha256: Quantum-vulnerable signature (RSA) used for TLS handshake signature. Action: Plan migration to ML-DSA (FIPS 204) once clients and the CA support it; prioritize long-lived roots and code signing."
+      },
+      {
+        "name": "cbom:finding:4",
+        "value": "[high] 127.0.0.1:14436 sha256WithRSAEncryption: Quantum-vulnerable signature (RSA) used for certificate signature. Action: Plan migration to ML-DSA (FIPS 204) once clients and the CA support it; prioritize long-lived roots and code signing."
+      },
+      {
+        "name": "cbom:finding:5",
+        "value": "[high] 127.0.0.1:14436 X25519MLKEM768: Offered only X25519MLKEM768; endpoint negotiated DH instead. Action: Upgrade the TLS terminator (OpenSSL 3.5+, s2n-tls, BoringSSL) or enable the provider's PQ policy."
+      }
+    ]
+  },
+  "components": [
+    {
+      "type": "cryptographic-asset",
+      "name": "AES-256-GCM",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "ae",
+          "executionEnvironment": "software-plain-ram",
+          "mode": "gcm",
+          "cryptoFunctions": [
+            "encrypt",
+            "decrypt"
+          ],
+          "classicalSecurityLevel": 256,
+          "nistQuantumSecurityLevel": 5
+        }
+      },
+      "properties": [
+        {
+          "name": "cbom:quantum-vulnerable",
+          "value": "false"
+        }
+      ],
+      "bom-ref": "crypto/algorithm/AES-256-GCM"
+    },
+    {
+      "type": "cryptographic-asset",
+      "name": "SHA-384",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "hash",
+          "executionEnvironment": "software-plain-ram",
+          "cryptoFunctions": [
+            "digest"
+          ],
+          "classicalSecurityLevel": 192,
+          "nistQuantumSecurityLevel": 4
+        }
+      },
+      "properties": [
+        {
+          "name": "cbom:quantum-vulnerable",
+          "value": "false"
+        }
+      ],
+      "bom-ref": "crypto/algorithm/SHA-384"
+    },
+    {
+      "type": "cryptographic-asset",
+      "name": "X25519",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "key-agree",
+          "executionEnvironment": "software-plain-ram",
+          "cryptoFunctions": [
+            "keygen",
+            "keyderive"
+          ],
+          "curve": "Curve25519",
+          "classicalSecurityLevel": 128,
+          "nistQuantumSecurityLevel": 0
+        }
+      },
+      "properties": [
+        {
+          "name": "cbom:quantum-vulnerable",
+          "value": "true"
+        },
+        {
+          "name": "cbom:tls-codepoint",
+          "value": "0x001D"
+        },
+        {
+          "name": "cbom:role",
+          "value": "key-exchange"
+        }
+      ],
+      "bom-ref": "crypto/algorithm/X25519"
+    },
+    {
+      "type": "cryptographic-asset",
+      "name": "rsa_pss_rsae_sha256",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "signature",
+          "executionEnvironment": "software-plain-ram",
+          "cryptoFunctions": [
+            "sign",
+            "verify"
+          ],
+          "nistQuantumSecurityLevel": 0
+        }
+      },
+      "properties": [
+        {
+          "name": "cbom:quantum-vulnerable",
+          "value": "true"
+        },
+        {
+          "name": "cbom:family",
+          "value": "RSA"
+        },
+        {
+          "name": "cbom:role",
+          "value": "TLS handshake signature"
+        }
+      ],
+      "bom-ref": "crypto/algorithm/rsa_pss_rsae_sha256"
+    },
+    {
+      "type": "cryptographic-asset",
+      "name": "sha256WithRSAEncryption",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "signature",
+          "executionEnvironment": "software-plain-ram",
+          "cryptoFunctions": [
+            "sign",
+            "verify"
+          ],
+          "nistQuantumSecurityLevel": 0
+        },
+        "oid": "1.2.840.113549.1.1.11"
+      },
+      "properties": [
+        {
+          "name": "cbom:quantum-vulnerable",
+          "value": "true"
+        },
+        {
+          "name": "cbom:family",
+          "value": "RSA"
+        },
+        {
+          "name": "cbom:role",
+          "value": "certificate signature"
+        }
+      ],
+      "bom-ref": "crypto/algorithm/sha256WithRSAEncryption"
+    },
+    {
+      "type": "cryptographic-asset",
+      "name": "RSA-3072",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "signature",
+          "nistQuantumSecurityLevel": 0,
+          "cryptoFunctions": [
+            "keygen",
+            "sign",
+            "verify"
+          ]
+        },
+        "oid": "1.2.840.113549.1.1.1"
+      },
+      "properties": [
+        {
+          "name": "cbom:quantum-vulnerable",
+          "value": "true"
+        },
+        {
+          "name": "cbom:role",
+          "value": "certificate public key"
+        }
+      ],
+      "bom-ref": "crypto/algorithm/RSA-3072"
+    },
+    {
+      "type": "cryptographic-asset",
+      "name": "public key of CN=Example Legacy Root CA",
+      "cryptoProperties": {
+        "assetType": "related-crypto-material",
+        "relatedCryptoMaterialProperties": {
+          "type": "public-key",
+          "algorithmRef": "crypto/algorithm/RSA-3072",
+          "size": 3072,
+          "format": "PEM"
+        }
+      },
+      "bom-ref": "crypto/key/7afe60045e0a12a9"
+    },
+    {
+      "type": "cryptographic-asset",
+      "name": "CN=Example Legacy Root CA",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "subjectName": "CN=Example Legacy Root CA",
+          "issuerName": "CN=Example Legacy Root CA",
+          "notValidBefore": "2026-09-30T22:32:50+00:00",
+          "notValidAfter": "2036-09-27T22:32:50+00:00",
+          "signatureAlgorithmRef": "crypto/algorithm/sha256WithRSAEncryption",
+          "subjectPublicKeyRef": "crypto/key/7afe60045e0a12a9",
+          "certificateFormat": "X.509",
+          "certificateExtension": "pem"
+        }
+      },
+      "properties": [
+        {
+          "name": "cbom:source",
+          "value": "127.0.0.1:14436"
+        },
+        {
+          "name": "cbom:sha256-fingerprint",
+          "value": "7A:FE:60:04:5E:0A:12:A9:99:EC:B3:AA:21:E3:21:9E:41:BA:EC:08:71:DA:7A:4C:D4:24:F4:6D:E6:42:02:95"
+        },
+        {
+          "name": "cbom:validity-days",
+          "value": "3650"
+        },
+        {
+          "name": "cbom:self-signed",
+          "value": "true"
+        }
+      ],
+      "bom-ref": "crypto/certificate/7afe60045e0a12a9"
+    },
+    {
+      "type": "cryptographic-asset",
+      "name": "TLS 1.2 at 127.0.0.1:14436",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "tls",
+          "version": "1.2",
+          "cipherSuites": [
+            {
+              "name": "ECDHE-RSA-AES256-GCM-SHA384",
+              "algorithms": [
+                "crypto/algorithm/AES-256-GCM",
+                "crypto/algorithm/SHA-384"
+              ]
+            }
+          ],
+          "cryptoRefArray": [
+            "crypto/algorithm/X25519",
+            "crypto/algorithm/rsa_pss_rsae_sha256",
+            "crypto/algorithm/AES-256-GCM",
+            "crypto/algorithm/SHA-384",
+            "crypto/certificate/7afe60045e0a12a9"
+          ]
+        }
+      },
+      "properties": [
+        {
+          "name": "cbom:endpoint",
+          "value": "127.0.0.1:14436"
+        },
+        {
+          "name": "cbom:negotiated-group",
+          "value": "X25519"
+        },
+        {
+          "name": "cbom:hybrid-pq-negotiated",
+          "value": "false"
+        },
+        {
+          "name": "cbom:hybrid-pq-supported",
+          "value": "false"
+        },
+        {
+          "name": "cbom:probe-command",
+          "value": "openssl s_client -connect 127.0.0.1:14436 -showcerts -servername legacy.example.test"
+        }
+      ],
+      "bom-ref": "crypto/protocol/tls/127.0.0.1:14436"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "crypto/certificate/7afe60045e0a12a9",
+      "dependsOn": [
+        "crypto/algorithm/sha256WithRSAEncryption",
+        "crypto/key/7afe60045e0a12a9"
+      ]
+    },
+    {
+      "ref": "crypto/key/7afe60045e0a12a9",
+      "dependsOn": [
+        "crypto/algorithm/RSA-3072"
+      ]
+    },
+    {
+      "ref": "crypto/protocol/tls/127.0.0.1:14436",
+      "dependsOn": [
+        "crypto/algorithm/AES-256-GCM",
+        "crypto/algorithm/SHA-384",
+        "crypto/algorithm/X25519",
+        "crypto/algorithm/rsa_pss_rsae_sha256",
+        "crypto/certificate/7afe60045e0a12a9"
+      ]
+    }
+  ]
+}

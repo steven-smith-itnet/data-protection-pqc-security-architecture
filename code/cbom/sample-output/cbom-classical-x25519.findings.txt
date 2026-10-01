@@ -1,0 +1,4 @@
+[high] 127.0.0.1:14434 X25519: Classical key exchange: recorded sessions are exposed to harvest now, decrypt later.
+[medium] 127.0.0.1:14434 ecdsa_secp256r1_sha256: Quantum-vulnerable signature (ECDSA) used for TLS handshake signature.
+[medium] 127.0.0.1:14434 ecdsa-with-SHA256: Quantum-vulnerable signature (ECDSA) used for certificate signature.
+[high] 127.0.0.1:14434 X25519MLKEM768: Offered only X25519MLKEM768; endpoint refused the handshake.

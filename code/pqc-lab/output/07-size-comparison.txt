@@ -1,0 +1,22 @@
+# Captured: 2026-09-30T22:25:14Z on Linux 7.0.0-31-generic, OpenSSL 3.5.5 27 Jan 2026 (Library: OpenSSL 3.5.5 27 Jan 2026)
+Algorithm              PubKey DER  PrivKey DER     Sig/CT bytes
+---------              ----------  -----------     ------------
+Key establishment
+RSA-3072 (OAEP)               422         1767         384 (ct)
+X25519                         44           48  32 (peer share)
+ML-KEM-512                    822         1730         768 (ct)
+ML-KEM-768                   1206         2498        1088 (ct)
+ML-KEM-1024                  1590         3266        1568 (ct)
+
+Signatures
+RSA-3072                      422         1768        384 (sig)
+ECDSA P-256                    91          121         72 (sig)
+Ed25519                        44           48         64 (sig)
+ML-DSA-44                    1334         2626       2420 (sig)
+ML-DSA-65                    1974         4098       3309 (sig)
+ML-DSA-87                    2614         4962       4627 (sig)
+SLH-DSA-SHA2-128s              50           84       7856 (sig)
+SLH-DSA-SHA2-128f              50           84      17088 (sig)
+
+Note: ECDSA signatures are DER-encoded and vary by a byte or two between runs.
+Note: OpenSSL 3.5 ML-KEM/ML-DSA private key DER may contain both seed and expanded key.

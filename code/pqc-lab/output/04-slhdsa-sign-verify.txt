@@ -1,0 +1,25 @@
+# Captured: 2026-09-30T22:25:07Z on Linux 7.0.0-31-generic, OpenSSL 3.5.5 27 Jan 2026 (Library: OpenSSL 3.5.5 27 Jan 2026)
+
+==== SLH-DSA-SHA2-128s ====
+
+$ openssl genpkey -algorithm SLH-DSA-SHA2-128s -out slh.key
+
+$ openssl pkey -in slh.key -pubout -out slh.pub
+
+$ openssl pkeyutl -sign -rawin -inkey slh.key -in manifest.txt -out manifest.sig
+signature bytes: 7856   sign wall time: 0.86 s
+
+$ openssl pkeyutl -verify -rawin -pubin -inkey slh.pub -in manifest.txt -sigfile manifest.sig
+Signature Verified Successfully
+
+==== SLH-DSA-SHA2-128f ====
+
+$ openssl genpkey -algorithm SLH-DSA-SHA2-128f -out slh.key
+
+$ openssl pkey -in slh.key -pubout -out slh.pub
+
+$ openssl pkeyutl -sign -rawin -inkey slh.key -in manifest.txt -out manifest.sig
+signature bytes: 17088   sign wall time: 0.05 s
+
+$ openssl pkeyutl -verify -rawin -pubin -inkey slh.pub -in manifest.txt -sigfile manifest.sig
+Signature Verified Successfully

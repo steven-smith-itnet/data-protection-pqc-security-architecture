@@ -1,0 +1,695 @@
+{
+    "format_version": "1.2",
+    "terraform_version": "1.16.4",
+    "planned_values": {
+        "root_module": {
+            "resources": [
+                {
+                    "address": "aws_kms_key.unrotated",
+                    "mode": "managed",
+                    "type": "aws_kms_key",
+                    "name": "unrotated",
+                    "provider_name": "registry.terraform.io/hashicorp/aws",
+                    "schema_version": 0,
+                    "values": {
+                        "bypass_policy_lockout_safety_check": false,
+                        "custom_key_store_id": null,
+                        "customer_master_key_spec": "SYMMETRIC_DEFAULT",
+                        "deletion_window_in_days": null,
+                        "description": "key without rotation",
+                        "enable_key_rotation": false,
+                        "is_enabled": true,
+                        "key_usage": "ENCRYPT_DECRYPT",
+                        "region": "eu-west-1",
+                        "tags": null,
+                        "timeouts": null,
+                        "xks_key_id": null
+                    },
+                    "sensitive_values": {
+                        "tags_all": {}
+                    },
+                    "identity_schema_version": 0,
+                    "identity": {
+                        "account_id": null,
+                        "id": null,
+                        "region": null
+                    }
+                },
+                {
+                    "address": "aws_s3_bucket.cards",
+                    "mode": "managed",
+                    "type": "aws_s3_bucket",
+                    "name": "cards",
+                    "provider_name": "registry.terraform.io/hashicorp/aws",
+                    "schema_version": 0,
+                    "values": {
+                        "bucket": "hosp-dp-dev-card-exports",
+                        "force_destroy": false,
+                        "region": "eu-west-1",
+                        "tags": {
+                            "data-classification": "restricted",
+                            "data-domain": "payment",
+                            "data-owner": "payments-team",
+                            "protection-profile": "pp2",
+                            "regulatory-scope": "pci"
+                        },
+                        "tags_all": {
+                            "data-classification": "restricted",
+                            "data-domain": "payment",
+                            "data-owner": "payments-team",
+                            "protection-profile": "pp2",
+                            "regulatory-scope": "pci"
+                        },
+                        "timeouts": null
+                    },
+                    "sensitive_values": {
+                        "cors_rule": [],
+                        "grant": [],
+                        "lifecycle_rule": [],
+                        "logging": [],
+                        "object_lock_configuration": [],
+                        "replication_configuration": [],
+                        "server_side_encryption_configuration": [],
+                        "tags": {},
+                        "tags_all": {},
+                        "versioning": [],
+                        "website": []
+                    },
+                    "identity_schema_version": 0,
+                    "identity": {
+                        "account_id": null,
+                        "bucket": null,
+                        "region": null
+                    }
+                },
+                {
+                    "address": "aws_s3_bucket.untagged",
+                    "mode": "managed",
+                    "type": "aws_s3_bucket",
+                    "name": "untagged",
+                    "provider_name": "registry.terraform.io/hashicorp/aws",
+                    "schema_version": 0,
+                    "values": {
+                        "bucket": "hosp-dp-dev-scratch",
+                        "force_destroy": false,
+                        "region": "eu-west-1",
+                        "tags": null,
+                        "timeouts": null
+                    },
+                    "sensitive_values": {
+                        "cors_rule": [],
+                        "grant": [],
+                        "lifecycle_rule": [],
+                        "logging": [],
+                        "object_lock_configuration": [],
+                        "replication_configuration": [],
+                        "server_side_encryption_configuration": [],
+                        "tags_all": {},
+                        "versioning": [],
+                        "website": []
+                    },
+                    "identity_schema_version": 0,
+                    "identity": {
+                        "account_id": null,
+                        "bucket": null,
+                        "region": null
+                    }
+                },
+                {
+                    "address": "aws_s3_bucket_acl.untagged",
+                    "mode": "managed",
+                    "type": "aws_s3_bucket_acl",
+                    "name": "untagged",
+                    "provider_name": "registry.terraform.io/hashicorp/aws",
+                    "schema_version": 0,
+                    "values": {
+                        "acl": "public-read",
+                        "expected_bucket_owner": null,
+                        "region": "eu-west-1"
+                    },
+                    "sensitive_values": {
+                        "access_control_policy": []
+                    },
+                    "identity_schema_version": 1,
+                    "identity": {
+                        "account_id": null,
+                        "bucket": null,
+                        "region": null
+                    }
+                },
+                {
+                    "address": "aws_s3_bucket_public_access_block.cards",
+                    "mode": "managed",
+                    "type": "aws_s3_bucket_public_access_block",
+                    "name": "cards",
+                    "provider_name": "registry.terraform.io/hashicorp/aws",
+                    "schema_version": 0,
+                    "values": {
+                        "block_public_acls": false,
+                        "block_public_policy": false,
+                        "ignore_public_acls": false,
+                        "region": "eu-west-1",
+                        "restrict_public_buckets": false,
+                        "skip_destroy": null
+                    },
+                    "sensitive_values": {},
+                    "identity_schema_version": 0,
+                    "identity": {
+                        "account_id": null,
+                        "bucket": null,
+                        "region": null
+                    }
+                },
+                {
+                    "address": "aws_s3_bucket_server_side_encryption_configuration.cards",
+                    "mode": "managed",
+                    "type": "aws_s3_bucket_server_side_encryption_configuration",
+                    "name": "cards",
+                    "provider_name": "registry.terraform.io/hashicorp/aws",
+                    "schema_version": 0,
+                    "values": {
+                        "expected_bucket_owner": null,
+                        "region": "eu-west-1",
+                        "rule": [
+                            {
+                                "apply_server_side_encryption_by_default": [
+                                    {
+                                        "sse_algorithm": "AES256"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "sensitive_values": {
+                        "rule": [
+                            {
+                                "apply_server_side_encryption_by_default": [
+                                    {}
+                                ],
+                                "blocked_encryption_types": []
+                            }
+                        ]
+                    },
+                    "identity_schema_version": 1,
+                    "identity": {
+                        "account_id": null,
+                        "bucket": null,
+                        "region": null
+                    }
+                }
+            ]
+        }
+    },
+    "resource_changes": [
+        {
+            "address": "aws_kms_key.unrotated",
+            "mode": "managed",
+            "type": "aws_kms_key",
+            "name": "unrotated",
+            "provider_name": "registry.terraform.io/hashicorp/aws",
+            "change": {
+                "actions": [
+                    "create"
+                ],
+                "before": null,
+                "after": {
+                    "bypass_policy_lockout_safety_check": false,
+                    "custom_key_store_id": null,
+                    "customer_master_key_spec": "SYMMETRIC_DEFAULT",
+                    "deletion_window_in_days": null,
+                    "description": "key without rotation",
+                    "enable_key_rotation": false,
+                    "is_enabled": true,
+                    "key_usage": "ENCRYPT_DECRYPT",
+                    "region": "eu-west-1",
+                    "tags": null,
+                    "timeouts": null,
+                    "xks_key_id": null
+                },
+                "after_unknown": {
+                    "arn": true,
+                    "id": true,
+                    "key_id": true,
+                    "multi_region": true,
+                    "policy": true,
+                    "rotation_period_in_days": true,
+                    "tags_all": true
+                },
+                "before_sensitive": false,
+                "after_sensitive": {
+                    "tags_all": {}
+                },
+                "after_identity": {
+                    "account_id": null,
+                    "id": null,
+                    "region": null
+                }
+            }
+        },
+        {
+            "address": "aws_s3_bucket.cards",
+            "mode": "managed",
+            "type": "aws_s3_bucket",
+            "name": "cards",
+            "provider_name": "registry.terraform.io/hashicorp/aws",
+            "change": {
+                "actions": [
+                    "create"
+                ],
+                "before": null,
+                "after": {
+                    "bucket": "hosp-dp-dev-card-exports",
+                    "force_destroy": false,
+                    "region": "eu-west-1",
+                    "tags": {
+                        "data-classification": "restricted",
+                        "data-domain": "payment",
+                        "data-owner": "payments-team",
+                        "protection-profile": "pp2",
+                        "regulatory-scope": "pci"
+                    },
+                    "tags_all": {
+                        "data-classification": "restricted",
+                        "data-domain": "payment",
+                        "data-owner": "payments-team",
+                        "protection-profile": "pp2",
+                        "regulatory-scope": "pci"
+                    },
+                    "timeouts": null
+                },
+                "after_unknown": {
+                    "acceleration_status": true,
+                    "acl": true,
+                    "arn": true,
+                    "bucket_domain_name": true,
+                    "bucket_namespace": true,
+                    "bucket_prefix": true,
+                    "bucket_region": true,
+                    "bucket_regional_domain_name": true,
+                    "cors_rule": true,
+                    "grant": true,
+                    "hosted_zone_id": true,
+                    "id": true,
+                    "lifecycle_rule": true,
+                    "logging": true,
+                    "object_lock_configuration": true,
+                    "object_lock_enabled": true,
+                    "policy": true,
+                    "replication_configuration": true,
+                    "request_payer": true,
+                    "server_side_encryption_configuration": true,
+                    "tags": {},
+                    "tags_all": {},
+                    "versioning": true,
+                    "website": true,
+                    "website_domain": true,
+                    "website_endpoint": true
+                },
+                "before_sensitive": false,
+                "after_sensitive": {
+                    "cors_rule": [],
+                    "grant": [],
+                    "lifecycle_rule": [],
+                    "logging": [],
+                    "object_lock_configuration": [],
+                    "replication_configuration": [],
+                    "server_side_encryption_configuration": [],
+                    "tags": {},
+                    "tags_all": {},
+                    "versioning": [],
+                    "website": []
+                },
+                "after_identity": {
+                    "account_id": null,
+                    "bucket": null,
+                    "region": null
+                }
+            }
+        },
+        {
+            "address": "aws_s3_bucket.untagged",
+            "mode": "managed",
+            "type": "aws_s3_bucket",
+            "name": "untagged",
+            "provider_name": "registry.terraform.io/hashicorp/aws",
+            "change": {
+                "actions": [
+                    "create"
+                ],
+                "before": null,
+                "after": {
+                    "bucket": "hosp-dp-dev-scratch",
+                    "force_destroy": false,
+                    "region": "eu-west-1",
+                    "tags": null,
+                    "timeouts": null
+                },
+                "after_unknown": {
+                    "acceleration_status": true,
+                    "acl": true,
+                    "arn": true,
+                    "bucket_domain_name": true,
+                    "bucket_namespace": true,
+                    "bucket_prefix": true,
+                    "bucket_region": true,
+                    "bucket_regional_domain_name": true,
+                    "cors_rule": true,
+                    "grant": true,
+                    "hosted_zone_id": true,
+                    "id": true,
+                    "lifecycle_rule": true,
+                    "logging": true,
+                    "object_lock_configuration": true,
+                    "object_lock_enabled": true,
+                    "policy": true,
+                    "replication_configuration": true,
+                    "request_payer": true,
+                    "server_side_encryption_configuration": true,
+                    "tags_all": true,
+                    "versioning": true,
+                    "website": true,
+                    "website_domain": true,
+                    "website_endpoint": true
+                },
+                "before_sensitive": false,
+                "after_sensitive": {
+                    "cors_rule": [],
+                    "grant": [],
+                    "lifecycle_rule": [],
+                    "logging": [],
+                    "object_lock_configuration": [],
+                    "replication_configuration": [],
+                    "server_side_encryption_configuration": [],
+                    "tags_all": {},
+                    "versioning": [],
+                    "website": []
+                },
+                "after_identity": {
+                    "account_id": null,
+                    "bucket": null,
+                    "region": null
+                }
+            }
+        },
+        {
+            "address": "aws_s3_bucket_acl.untagged",
+            "mode": "managed",
+            "type": "aws_s3_bucket_acl",
+            "name": "untagged",
+            "provider_name": "registry.terraform.io/hashicorp/aws",
+            "change": {
+                "actions": [
+                    "create"
+                ],
+                "before": null,
+                "after": {
+                    "acl": "public-read",
+                    "expected_bucket_owner": null,
+                    "region": "eu-west-1"
+                },
+                "after_unknown": {
+                    "access_control_policy": true,
+                    "bucket": true,
+                    "id": true
+                },
+                "before_sensitive": false,
+                "after_sensitive": {
+                    "access_control_policy": []
+                },
+                "after_identity": {
+                    "account_id": null,
+                    "bucket": null,
+                    "region": null
+                }
+            }
+        },
+        {
+            "address": "aws_s3_bucket_public_access_block.cards",
+            "mode": "managed",
+            "type": "aws_s3_bucket_public_access_block",
+            "name": "cards",
+            "provider_name": "registry.terraform.io/hashicorp/aws",
+            "change": {
+                "actions": [
+                    "create"
+                ],
+                "before": null,
+                "after": {
+                    "block_public_acls": false,
+                    "block_public_policy": false,
+                    "ignore_public_acls": false,
+                    "region": "eu-west-1",
+                    "restrict_public_buckets": false,
+                    "skip_destroy": null
+                },
+                "after_unknown": {
+                    "bucket": true,
+                    "id": true
+                },
+                "before_sensitive": false,
+                "after_sensitive": {},
+                "after_identity": {
+                    "account_id": null,
+                    "bucket": null,
+                    "region": null
+                }
+            }
+        },
+        {
+            "address": "aws_s3_bucket_server_side_encryption_configuration.cards",
+            "mode": "managed",
+            "type": "aws_s3_bucket_server_side_encryption_configuration",
+            "name": "cards",
+            "provider_name": "registry.terraform.io/hashicorp/aws",
+            "change": {
+                "actions": [
+                    "create"
+                ],
+                "before": null,
+                "after": {
+                    "expected_bucket_owner": null,
+                    "region": "eu-west-1",
+                    "rule": [
+                        {
+                            "apply_server_side_encryption_by_default": [
+                                {
+                                    "sse_algorithm": "AES256"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "after_unknown": {
+                    "bucket": true,
+                    "id": true,
+                    "rule": [
+                        {
+                            "apply_server_side_encryption_by_default": [
+                                {
+                                    "kms_master_key_id": true
+                                }
+                            ],
+                            "blocked_encryption_types": true,
+                            "bucket_key_enabled": true
+                        }
+                    ]
+                },
+                "before_sensitive": false,
+                "after_sensitive": {
+                    "rule": [
+                        {
+                            "apply_server_side_encryption_by_default": [
+                                {}
+                            ],
+                            "blocked_encryption_types": []
+                        }
+                    ]
+                },
+                "after_identity": {
+                    "account_id": null,
+                    "bucket": null,
+                    "region": null
+                }
+            }
+        }
+    ],
+    "configuration": {
+        "provider_config": {
+            "aws": {
+                "name": "aws",
+                "full_name": "registry.terraform.io/hashicorp/aws",
+                "version_constraint": "~> 6.67",
+                "expressions": {
+                    "access_key": {
+                        "constant_value": "placeholder-not-a-key"
+                    },
+                    "region": {
+                        "constant_value": "eu-west-1"
+                    },
+                    "secret_key": {
+                        "constant_value": "placeholder-not-a-key"
+                    },
+                    "skip_credentials_validation": {
+                        "constant_value": true
+                    },
+                    "skip_metadata_api_check": {
+                        "constant_value": true
+                    },
+                    "skip_region_validation": {
+                        "constant_value": true
+                    },
+                    "skip_requesting_account_id": {
+                        "constant_value": true
+                    }
+                }
+            }
+        },
+        "root_module": {
+            "resources": [
+                {
+                    "address": "aws_kms_key.unrotated",
+                    "mode": "managed",
+                    "type": "aws_kms_key",
+                    "name": "unrotated",
+                    "provider_config_key": "aws",
+                    "expressions": {
+                        "description": {
+                            "constant_value": "key without rotation"
+                        },
+                        "enable_key_rotation": {
+                            "constant_value": false
+                        }
+                    },
+                    "schema_version": 0
+                },
+                {
+                    "address": "aws_s3_bucket.cards",
+                    "mode": "managed",
+                    "type": "aws_s3_bucket",
+                    "name": "cards",
+                    "provider_config_key": "aws",
+                    "expressions": {
+                        "bucket": {
+                            "constant_value": "hosp-dp-dev-card-exports"
+                        },
+                        "tags": {
+                            "constant_value": {
+                                "data-classification": "restricted",
+                                "data-domain": "payment",
+                                "data-owner": "payments-team",
+                                "protection-profile": "pp2",
+                                "regulatory-scope": "pci"
+                            }
+                        }
+                    },
+                    "schema_version": 0
+                },
+                {
+                    "address": "aws_s3_bucket.untagged",
+                    "mode": "managed",
+                    "type": "aws_s3_bucket",
+                    "name": "untagged",
+                    "provider_config_key": "aws",
+                    "expressions": {
+                        "bucket": {
+                            "constant_value": "hosp-dp-dev-scratch"
+                        }
+                    },
+                    "schema_version": 0
+                },
+                {
+                    "address": "aws_s3_bucket_acl.untagged",
+                    "mode": "managed",
+                    "type": "aws_s3_bucket_acl",
+                    "name": "untagged",
+                    "provider_config_key": "aws",
+                    "expressions": {
+                        "acl": {
+                            "constant_value": "public-read"
+                        },
+                        "bucket": {
+                            "references": [
+                                "aws_s3_bucket.untagged.id",
+                                "aws_s3_bucket.untagged"
+                            ]
+                        }
+                    },
+                    "schema_version": 0
+                },
+                {
+                    "address": "aws_s3_bucket_public_access_block.cards",
+                    "mode": "managed",
+                    "type": "aws_s3_bucket_public_access_block",
+                    "name": "cards",
+                    "provider_config_key": "aws",
+                    "expressions": {
+                        "block_public_acls": {
+                            "constant_value": false
+                        },
+                        "block_public_policy": {
+                            "constant_value": false
+                        },
+                        "bucket": {
+                            "references": [
+                                "aws_s3_bucket.cards.id",
+                                "aws_s3_bucket.cards"
+                            ]
+                        },
+                        "ignore_public_acls": {
+                            "constant_value": false
+                        },
+                        "restrict_public_buckets": {
+                            "constant_value": false
+                        }
+                    },
+                    "schema_version": 0
+                },
+                {
+                    "address": "aws_s3_bucket_server_side_encryption_configuration.cards",
+                    "mode": "managed",
+                    "type": "aws_s3_bucket_server_side_encryption_configuration",
+                    "name": "cards",
+                    "provider_config_key": "aws",
+                    "expressions": {
+                        "bucket": {
+                            "references": [
+                                "aws_s3_bucket.cards.id",
+                                "aws_s3_bucket.cards"
+                            ]
+                        },
+                        "rule": [
+                            {
+                                "apply_server_side_encryption_by_default": [
+                                    {
+                                        "sse_algorithm": {
+                                            "constant_value": "AES256"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "schema_version": 0
+                }
+            ]
+        }
+    },
+    "relevant_attributes": [
+        {
+            "resource": "aws_s3_bucket.cards",
+            "attribute": [
+                "id"
+            ]
+        },
+        {
+            "resource": "aws_s3_bucket.untagged",
+            "attribute": [
+                "id"
+            ]
+        }
+    ],
+    "timestamp": "2026-09-30T22:38:29Z",
+    "applyable": true,
+    "complete": true,
+    "errored": false
+}

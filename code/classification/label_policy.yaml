@@ -1,0 +1,256 @@
+# Label-to-control policy (machine-readable)
+#
+# Phase 1 (Know the data) output consumed by Phase 2 to 5 controls.
+# Chain: classification tier -> sensitivity label -> protection profile -> controls,
+# per data state and per cloud, plus overlays driven by regulatory-scope,
+# data-domain, and retention-class tags.
+#
+# This file is the single source of truth for resolve_controls.py, and the same
+# values are mirrored in the Terraform variable validation blocks and the OPA
+# policies under code/policy/opa/. Change them together.
+#
+# Product names reflect provider documentation as of mid-2026. Verify preview
+# or GA status of any feature before relying on it.
+
+version: 1
+
+schema:
+  # All tag keys and values are lowercase with hyphens and underscores only,
+  # so the same tags work as AWS tags, Azure tags, GCP labels, and OCI tags.
+  keys:
+    data-classification: [public, internal, confidential, restricted]
+    protection-profile: [pp1, pp2, pp3]
+    data-domain: [guest, payment, loyalty, employee, finance, operations, property-iot, security]
+    regulatory-scope-atoms: [none, pci, gdpr, ccpa, pipl, lgpd]
+    data-residency: [us, eu, uk, cn, apac, latam, mea, global]
+    retention-class: [r90d, r1y, r3y, r7y, r10y, legal-hold]
+  free_form:
+    data-owner: "^[a-z0-9][a-z0-9_-]{1,62}$"
+  # Only data-classification is mandatory to resolve controls; the others are
+  # reported as warnings when absent (the guardrails in code/policy/ enforce
+  # them at resource creation).
+  required: [data-classification]
+  recommended: [data-domain, regulatory-scope, data-owner, data-residency, retention-class]
+
+tiers:
+  C0: {classification: public, profile: pp1, labels: [Public]}
+  C1: {classification: internal, profile: pp1, labels: [Internal]}
+  C2:
+    classification: confidential
+    profile: pp2
+    labels: ["Confidential\\Guest-PII", "Confidential\\Employee", "Confidential\\Business"]
+  C3:
+    classification: restricted
+    profile: pp3
+    labels:
+      - "Restricted\\PCI"
+      - "Restricted\\Guest-Identity"
+      - "Restricted\\Special-Category"
+      - "Restricted\\Secrets"
+
+# Default label when only a tier and a domain are known.
+label_hints:
+  confidential:
+    guest: "Confidential\\Guest-PII"
+    loyalty: "Confidential\\Guest-PII"
+    payment: "Confidential\\Business"
+    employee: "Confidential\\Employee"
+    finance: "Confidential\\Business"
+    operations: "Confidential\\Business"
+    property-iot: "Confidential\\Business"
+    security: "Confidential\\Business"
+  restricted:
+    guest: "Restricted\\Guest-Identity"
+    loyalty: "Restricted\\Guest-Identity"
+    payment: "Restricted\\PCI"
+    employee: "Restricted\\Special-Category"
+    finance: "Restricted\\Guest-Identity"
+    operations: "Restricted\\Secrets"
+    property-iot: "Restricted\\Secrets"
+    security: "Restricted\\Secrets"
+
+profiles:
+  pp1:
+    name: PP-1 Baseline
+    tier_rating: Good
+    applies_to: [C0, C1]
+    common:
+      key_type: provider-managed
+      key_rotation: provider-managed schedule
+      key_admin_user_separation: false
+      access_review: annual
+      logging: platform audit logging enabled
+    data_states:
+      at_rest:
+        encryption_layer: platform default encryption at rest
+        masking: none
+        dlp_action: none
+      in_transit:
+        tls: TLS 1.2 minimum
+        mtls: not required
+        pq_hybrid: inherit provider defaults
+      in_use:
+        control: standard IAM
+    clouds:
+      aws:
+        key: "AWS owned or AWS managed key"
+        storage: "SSE-S3 default"
+        database: "default encryption"
+      azure:
+        key: "Microsoft-managed keys"
+        storage: "default Storage Service Encryption"
+        database: "TDE with service-managed key"
+      gcp:
+        key: "Google default encryption"
+        storage: "default encryption"
+        database: "default encryption"
+      oci:
+        key: "Oracle-managed keys"
+        storage: "default encryption"
+        database: "default TDE with Oracle-managed key"
+      on_prem:
+        key: "platform or array encryption"
+        storage: "self-encrypting drives or volume encryption"
+        database: "optional TDE"
+
+  pp2:
+    name: PP-2 Enhanced
+    tier_rating: Better
+    applies_to: [C2]
+    common:
+      key_type: customer-managed key in cloud KMS, HSM-backed where offered
+      key_scope: one key per data domain per environment
+      key_rotation: automatic, 365 days or less
+      key_admin_user_separation: true
+      access_review: quarterly
+      logging: key usage logged and retained; alert on disable or schedule-deletion
+    data_states:
+      at_rest:
+        encryption_layer: storage or database encryption with CMK (TDE with CMK for databases)
+        masking: dynamic masking for non-privileged roles
+        dlp_action: monitor, then block on external sharing after tuning
+      in_transit:
+        tls: TLS 1.2 minimum, prefer TLS 1.3
+        mtls: recommended for service-to-service
+        pq_hybrid: enable X25519MLKEM768 where the platform supports it
+      in_use:
+        control: least-privilege IAM, no standing admin access to data plane
+    clouds:
+      aws:
+        key: "customer managed KMS key (default key store)"
+        storage: "SSE-KMS with S3 Bucket Keys"
+        database: "RDS or Aurora encryption with customer managed KMS key"
+      azure:
+        key: "Key Vault Premium HSM-backed key"
+        storage: "storage account CMK"
+        database: "SQL TDE with customer-managed key"
+      gcp:
+        key: "Cloud KMS key with HSM protection level"
+        storage: "CMEK on bucket"
+        database: "CMEK on Cloud SQL, BigQuery, Spanner"
+      oci:
+        key: "Vault master encryption key, HSM-protected"
+        storage: "Object Storage bucket with Vault key"
+        database: "Autonomous Database or Base DB TDE with customer-managed key"
+      on_prem:
+        key: "enterprise key manager over KMIP"
+        storage: "array or volume encryption with external key manager"
+        database: "TDE with external key manager"
+
+  pp3:
+    name: PP-3 Maximum
+    tier_rating: Best
+    applies_to: [C3]
+    inherits: pp2
+    common:
+      key_type: customer-managed key in single-tenant HSM, or customer-held/external key where justified
+      key_scope: one key per data domain per environment; per-subject DEKs where erasure is required
+      key_rotation: automatic, 365 days or less, cryptoperiod set per SP 800-57
+      key_admin_user_separation: true
+      access_review: quarterly, with just-in-time access for administrators
+      logging: key usage logged, SIEM alert on every decrypt outside the owning workload
+      pqc_priority: high for long-lived data (harvest now, decrypt later)
+    data_states:
+      at_rest:
+        encryption_layer: application-layer or field-level encryption, or tokenization, before data leaves the application, on top of CMK storage encryption
+        masking: tokenization or format-preserving encryption; PAN displays show at most BIN and last four
+        dlp_action: block
+        persistent_file_protection: sensitivity label with encryption (DKE where justified)
+        erasure: crypto-shredding by destroying per-subject or per-dataset keys
+      in_transit:
+        tls: TLS 1.2 minimum, prefer TLS 1.3
+        mtls: required for service-to-service
+        pq_hybrid: required where the platform supports it; track exceptions
+      in_use:
+        control: just-in-time access; confidential computing where feasible
+    clouds:
+      aws:
+        key: "KMS key in CloudHSM custom key store or external key store (XKS) where justified"
+        storage: "SSE-KMS or DSSE-KMS plus AWS Encryption SDK"
+        database: "AWS Database Encryption SDK field-level encryption plus KMS"
+        in_use: "Nitro Enclaves where feasible"
+      azure:
+        key: "Managed HSM key"
+        storage: "CMK plus infrastructure encryption; Purview label encryption for files"
+        database: "Always Encrypted (secure enclaves where needed) plus TDE CMK"
+        in_use: "confidential VMs (AMD SEV-SNP or Intel TDX)"
+      gcp:
+        key: "Cloud HSM or Cloud EKM key"
+        storage: "CMEK plus client-side encryption (Tink)"
+        database: "BigQuery AEAD functions or application-layer encryption plus CMEK"
+        in_use: "Confidential VMs or Confidential Space"
+      oci:
+        key: "Dedicated KMS or External KMS key"
+        storage: "Vault key plus application-layer encryption"
+        database: "TDE with customer-managed key plus Data Safe masking in non-production"
+      on_prem:
+        key: "HSM-backed key manager with dual control"
+        storage: "file-level transparent encryption with access policies"
+        database: "TDE plus column or application-layer encryption"
+
+# Overlays add controls on top of the profile. Atoms come from regulatory-scope,
+# which may combine several atoms with "_", for example pci_gdpr.
+overlays:
+  regulatory-scope:
+    pci:
+      - "PCI DSS 3.3: sensitive authentication data is not retained after authorization"
+      - "PCI DSS 3.4.1: PAN masked when displayed (BIN and last four maximum)"
+      - "PCI DSS 3.5.1: PAN unreadable wherever stored (tokenization, strong cryptography, or keyed hash)"
+      - "PCI DSS 3.5.1.1: hashes of PAN are keyed (HMAC), never plain SHA-256"
+      - "PCI DSS 3.5.1.2: disk or partition encryption alone is not sufficient except removable media"
+      - "PCI DSS 3.6 and 3.7: key custodians, split knowledge and dual control, defined cryptoperiods"
+      - "PCI DSS 4.2.1 and 4.2.1.1: strong cryptography over public networks; inventory of trusted keys and certificates"
+      - "PCI DSS 12.3.3: review cipher suites and protocols at least every 12 months (CBOM)"
+      - "Scope reduction: prefer P2PE, gateway or network tokens, and hosted payment pages"
+    gdpr:
+      - "Art. 32: encryption and pseudonymization as appropriate technical measures"
+      - "Art. 17: erasure supported (crypto-shredding for backups and immutable stores)"
+      - "Art. 44 onward: transfers outside the EEA assessed; key location recorded"
+    ccpa:
+      - "Deletion requests honored across primary stores and derived datasets"
+      - "Reasonable security measures documented for personal information"
+    pipl:
+      - "Personal information of individuals in China kept in-region unless a transfer mechanism applies"
+      - "Separate consent and impact assessment for sensitive personal information"
+    lgpd:
+      - "Security measures and incident notification for personal data of individuals in Brazil"
+    none: []
+  data-domain:
+    payment:
+      - "Tokenize PAN at capture; downstream systems hold tokens only"
+      - "Detokenization restricted to named service roles with logged justification"
+    guest:
+      - "Keyed-hash (HMAC) surrogates for analytics joins instead of raw identifiers"
+    loyalty:
+      - "Keyed-hash surrogates for analytics joins; points balance treated as Confidential"
+    employee:
+      - "HR records separated from guest data; special-category fields at Restricted"
+    security:
+      - "Secrets in a secrets manager, never in code or tags; short-lived credentials"
+  retention-class:
+    r90d: "Delete after 90 days"
+    r1y: "Delete after 1 year"
+    r3y: "Delete after 3 years"
+    r7y: "Delete after 7 years"
+    r10y: "Delete after 10 years"
+    legal-hold: "Retain until the hold is released; deletion and key destruction blocked"

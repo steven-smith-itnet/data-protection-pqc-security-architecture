@@ -1,0 +1,1 @@
+[high] rsa-root.pem sha256WithRSAEncryption: Quantum-vulnerable signature (RSA) used for certificate signature.

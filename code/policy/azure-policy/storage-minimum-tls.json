@@ -1,0 +1,58 @@
+{
+  "properties": {
+    "displayName": "Storage accounts must require TLS 1.2 or later",
+    "policyType": "Custom",
+    "mode": "Indexed",
+    "description": "Denies storage accounts whose minimum TLS version is missing or below TLS 1.2 (PP-1 baseline and above).",
+    "metadata": {
+      "category": "Storage",
+      "version": "1.0.0"
+    },
+    "parameters": {
+      "effect": {
+        "type": "String",
+        "allowedValues": [
+          "Audit",
+          "Deny",
+          "Disabled"
+        ],
+        "defaultValue": "Deny"
+      },
+      "allowedVersions": {
+        "type": "Array",
+        "metadata": {
+          "displayName": "Allowed minimum TLS versions",
+          "description": "Values accepted for minimumTlsVersion."
+        },
+        "defaultValue": [
+          "TLS1_2"
+        ]
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Storage/storageAccounts"
+          },
+          {
+            "anyOf": [
+              {
+                "field": "Microsoft.Storage/storageAccounts/minimumTlsVersion",
+                "exists": "false"
+              },
+              {
+                "field": "Microsoft.Storage/storageAccounts/minimumTlsVersion",
+                "notIn": "[parameters('allowedVersions')]"
+              }
+            ]
+          }
+        ]
+      },
+      "then": {
+        "effect": "[parameters('effect')]"
+      }
+    }
+  }
+}

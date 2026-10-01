@@ -1,0 +1,254 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:f875ce25-eca8-4607-a512-2c6d79e9491d",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-09-30T22:32:52+00:00",
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "name": "cbom_scan",
+          "version": "1.0.0",
+          "description": "TLS and certificate CBOM scanner using OpenSSL 3.5.5 27 Jan 2026 (Library: OpenSSL 3.5.5 27 Jan 2026)"
+        }
+      ]
+    },
+    "properties": [
+      {
+        "name": "cbom:quantum-vulnerable-assets",
+        "value": "RSA-3072, sha256WithRSAEncryption"
+      },
+      {
+        "name": "cbom:finding-count",
+        "value": "1"
+      },
+      {
+        "name": "cbom:finding:1",
+        "value": "[high] rsa-root.pem sha256WithRSAEncryption: Quantum-vulnerable signature (RSA) used for certificate signature. Action: Plan migration to ML-DSA (FIPS 204) once clients and the CA support it; prioritize long-lived roots and code signing."
+      }
+    ]
+  },
+  "components": [
+    {
+      "type": "cryptographic-asset",
+      "name": "sha256WithRSAEncryption",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "signature",
+          "executionEnvironment": "software-plain-ram",
+          "cryptoFunctions": [
+            "sign",
+            "verify"
+          ],
+          "nistQuantumSecurityLevel": 0
+        },
+        "oid": "1.2.840.113549.1.1.11"
+      },
+      "properties": [
+        {
+          "name": "cbom:quantum-vulnerable",
+          "value": "true"
+        },
+        {
+          "name": "cbom:family",
+          "value": "RSA"
+        },
+        {
+          "name": "cbom:role",
+          "value": "certificate signature"
+        }
+      ],
+      "bom-ref": "crypto/algorithm/sha256WithRSAEncryption"
+    },
+    {
+      "type": "cryptographic-asset",
+      "name": "RSA-3072",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "signature",
+          "nistQuantumSecurityLevel": 0,
+          "cryptoFunctions": [
+            "keygen",
+            "sign",
+            "verify"
+          ]
+        },
+        "oid": "1.2.840.113549.1.1.1"
+      },
+      "properties": [
+        {
+          "name": "cbom:quantum-vulnerable",
+          "value": "true"
+        },
+        {
+          "name": "cbom:role",
+          "value": "certificate public key"
+        }
+      ],
+      "bom-ref": "crypto/algorithm/RSA-3072"
+    },
+    {
+      "type": "cryptographic-asset",
+      "name": "public key of CN=Example Legacy Root CA",
+      "cryptoProperties": {
+        "assetType": "related-crypto-material",
+        "relatedCryptoMaterialProperties": {
+          "type": "public-key",
+          "algorithmRef": "crypto/algorithm/RSA-3072",
+          "size": 3072,
+          "format": "PEM"
+        }
+      },
+      "bom-ref": "crypto/key/7afe60045e0a12a9"
+    },
+    {
+      "type": "cryptographic-asset",
+      "name": "CN=Example Legacy Root CA",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "subjectName": "CN=Example Legacy Root CA",
+          "issuerName": "CN=Example Legacy Root CA",
+          "notValidBefore": "2026-09-30T22:32:50+00:00",
+          "notValidAfter": "2036-09-27T22:32:50+00:00",
+          "signatureAlgorithmRef": "crypto/algorithm/sha256WithRSAEncryption",
+          "subjectPublicKeyRef": "crypto/key/7afe60045e0a12a9",
+          "certificateFormat": "X.509",
+          "certificateExtension": "pem"
+        }
+      },
+      "properties": [
+        {
+          "name": "cbom:source",
+          "value": "rsa-root.pem"
+        },
+        {
+          "name": "cbom:sha256-fingerprint",
+          "value": "7A:FE:60:04:5E:0A:12:A9:99:EC:B3:AA:21:E3:21:9E:41:BA:EC:08:71:DA:7A:4C:D4:24:F4:6D:E6:42:02:95"
+        },
+        {
+          "name": "cbom:validity-days",
+          "value": "3650"
+        },
+        {
+          "name": "cbom:self-signed",
+          "value": "true"
+        }
+      ],
+      "bom-ref": "crypto/certificate/7afe60045e0a12a9"
+    },
+    {
+      "type": "cryptographic-asset",
+      "name": "ML-DSA-65",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "signature",
+          "executionEnvironment": "software-plain-ram",
+          "cryptoFunctions": [
+            "sign",
+            "verify"
+          ],
+          "nistQuantumSecurityLevel": 3
+        },
+        "oid": "2.16.840.1.101.3.4.3.18"
+      },
+      "properties": [
+        {
+          "name": "cbom:quantum-vulnerable",
+          "value": "false"
+        },
+        {
+          "name": "cbom:family",
+          "value": "ML-DSA-65"
+        },
+        {
+          "name": "cbom:role",
+          "value": "certificate signature"
+        }
+      ],
+      "bom-ref": "crypto/algorithm/ML-DSA-65"
+    },
+    {
+      "type": "cryptographic-asset",
+      "name": "public key of CN=pq-gateway.example.test",
+      "cryptoProperties": {
+        "assetType": "related-crypto-material",
+        "relatedCryptoMaterialProperties": {
+          "type": "public-key",
+          "algorithmRef": "crypto/algorithm/ML-DSA-65",
+          "format": "PEM"
+        }
+      },
+      "bom-ref": "crypto/key/7053f7495059d80a"
+    },
+    {
+      "type": "cryptographic-asset",
+      "name": "CN=pq-gateway.example.test",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "subjectName": "CN=pq-gateway.example.test",
+          "issuerName": "CN=pq-gateway.example.test",
+          "notValidBefore": "2026-09-30T22:32:50+00:00",
+          "notValidAfter": "2026-10-30T22:32:50+00:00",
+          "signatureAlgorithmRef": "crypto/algorithm/ML-DSA-65",
+          "subjectPublicKeyRef": "crypto/key/7053f7495059d80a",
+          "certificateFormat": "X.509",
+          "certificateExtension": "pem"
+        }
+      },
+      "properties": [
+        {
+          "name": "cbom:source",
+          "value": "mldsa.pem"
+        },
+        {
+          "name": "cbom:sha256-fingerprint",
+          "value": "70:53:F7:49:50:59:D8:0A:C3:F7:93:A8:66:4B:7A:E4:EB:44:3B:9A:D4:14:CD:4A:BA:66:05:AE:71:55:3A:34"
+        },
+        {
+          "name": "cbom:validity-days",
+          "value": "30"
+        },
+        {
+          "name": "cbom:self-signed",
+          "value": "true"
+        }
+      ],
+      "bom-ref": "crypto/certificate/7053f7495059d80a"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "crypto/certificate/7afe60045e0a12a9",
+      "dependsOn": [
+        "crypto/algorithm/sha256WithRSAEncryption",
+        "crypto/key/7afe60045e0a12a9"
+      ]
+    },
+    {
+      "ref": "crypto/key/7afe60045e0a12a9",
+      "dependsOn": [
+        "crypto/algorithm/RSA-3072"
+      ]
+    },
+    {
+      "ref": "crypto/certificate/7053f7495059d80a",
+      "dependsOn": [
+        "crypto/algorithm/ML-DSA-65",
+        "crypto/key/7053f7495059d80a"
+      ]
+    },
+    {
+      "ref": "crypto/key/7053f7495059d80a",
+      "dependsOn": [
+        "crypto/algorithm/ML-DSA-65"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+# Data residency for the EU folder (data-residency=eu): resources may only be
+# created in EU locations. Uses the "in:eu-locations" value group.
+name: folders/EU_FOLDER_ID/policies/gcp.resourceLocations
+spec:
+  rules:
+    - values:
+        allowedValues:
+          - in:eu-locations

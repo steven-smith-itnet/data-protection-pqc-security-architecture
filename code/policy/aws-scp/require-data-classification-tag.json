@@ -1,0 +1,65 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "DenyCreateWithoutDataClassificationTag",
+      "Effect": "Deny",
+      "Action": [
+        "kms:CreateKey",
+        "rds:CreateDBInstance",
+        "rds:CreateDBCluster",
+        "ec2:CreateVolume",
+        "secretsmanager:CreateSecret"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "Null": {
+          "aws:RequestTag/data-classification": "true"
+        }
+      }
+    },
+    {
+      "Sid": "DenyCreateWithInvalidDataClassification",
+      "Effect": "Deny",
+      "Action": [
+        "kms:CreateKey",
+        "rds:CreateDBInstance",
+        "rds:CreateDBCluster",
+        "ec2:CreateVolume",
+        "secretsmanager:CreateSecret"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringNotEqualsIfExists": {
+          "aws:RequestTag/data-classification": [
+            "public",
+            "internal",
+            "confidential",
+            "restricted"
+          ]
+        }
+      }
+    },
+    {
+      "Sid": "DenyRemovingDataClassificationTag",
+      "Effect": "Deny",
+      "Action": [
+        "kms:UntagResource",
+        "rds:RemoveTagsFromResource",
+        "ec2:DeleteTags",
+        "secretsmanager:UntagResource"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "ForAnyValue:StringEquals": {
+          "aws:TagKeys": [
+            "data-classification"
+          ]
+        },
+        "ArnNotLike": {
+          "aws:PrincipalArn": "arn:aws:iam::*:role/data-governance-admin"
+        }
+      }
+    }
+  ]
+}

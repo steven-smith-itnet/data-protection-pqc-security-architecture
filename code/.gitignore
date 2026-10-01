@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+tfplan
+crash.log
+# Reusable modules do not pin a lock file; the example root modules do.
+terraform/aws/.terraform.lock.hcl
+terraform/azure/.terraform.lock.hcl
+terraform/gcp/.terraform.lock.hcl
+terraform/oci/.terraform.lock.hcl
+
+# Local SQLite databases (token vault, crypto-shredding demo)
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+
+# Throwaway keys and certificates from local tests and demos
+*.key
+*.pem
+*.p12
+*.pfx
+*.der
+throwaway/
+
+# CycloneDX schemas downloaded for validation
+.schemas/
+
+# code/pqc-lab/ is owned separately and manages its own ignores; nothing in
+# this file applies there.
+!pqc-lab/**

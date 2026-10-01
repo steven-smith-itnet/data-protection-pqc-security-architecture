@@ -1,0 +1,51 @@
+{
+  "properties": {
+    "displayName": "Storage accounts holding confidential or restricted data must use a customer-managed key",
+    "policyType": "Custom",
+    "mode": "Indexed",
+    "description": "Label-driven control: when the data-classification tag is confidential or restricted (protection profile pp2 or pp3), the storage account must encrypt with a customer-managed key from Key Vault or Managed HSM.",
+    "metadata": {
+      "category": "Storage",
+      "version": "1.0.0"
+    },
+    "parameters": {
+      "effect": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Effect",
+          "description": "Audit first, then Deny once existing accounts are remediated."
+        },
+        "allowedValues": [
+          "Audit",
+          "Deny",
+          "Disabled"
+        ],
+        "defaultValue": "Audit"
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Storage/storageAccounts"
+          },
+          {
+            "field": "tags['data-classification']",
+            "in": [
+              "confidential",
+              "restricted"
+            ]
+          },
+          {
+            "field": "Microsoft.Storage/storageAccounts/encryption.keySource",
+            "notEquals": "Microsoft.Keyvault"
+          }
+        ]
+      },
+      "then": {
+        "effect": "[parameters('effect')]"
+      }
+    }
+  }
+}

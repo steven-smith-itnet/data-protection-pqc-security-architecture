@@ -1,0 +1,10 @@
+# Deny TLS 1.0 and 1.1 on Google Cloud APIs that support this constraint.
+# Verify the supported-services list and value names in the current
+# documentation before enforcing (as of mid-2026).
+name: organizations/ORG_ID/policies/gcp.restrictTLSVersion
+spec:
+  rules:
+    - values:
+        deniedValues:
+          - TLS_VERSION_1
+          - TLS_VERSION_1_1

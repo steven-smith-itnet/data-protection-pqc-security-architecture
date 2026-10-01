@@ -1,0 +1,36 @@
+# Captured: 2026-09-30T22:25:16Z on Linux 7.0.0-31-generic, OpenSSL 3.5.5 27 Jan 2026 (Library: OpenSSL 3.5.5 27 Jan 2026)
+
+==== CPU ====
+model name	: Intel(R) Core(TM) i7-8700K CPU @ 3.70GHz
+
+==== Key establishment: ML-KEM vs X25519 vs RSA-3072 (2s per test) ====
+
+$ openssl speed -seconds 2 -kem-algorithms ML-KEM-512 ML-KEM-768 ML-KEM-1024
+                               keygen    encaps    decaps keygens/s  encaps/s  decaps/s
+                 ML-KEM-512 0.000034s 0.000023s 0.000036s   29803.6   42654.6   27601.5
+                 ML-KEM-768 0.000054s 0.000033s 0.000048s   18645.9   29973.6   20627.8
+                ML-KEM-1024 0.000077s 0.000042s 0.000063s   13038.3   23726.9   15766.5
+
+$ openssl speed -seconds 2 ecdhx25519 rsa3072
+                   sign    verify    encrypt   decrypt   sign/s verify/s  encr./s  decr./s
+rsa  3072 bits 0.001524s 0.000031s 0.000033s 0.001547s    656.0  32501.0  30355.1    646.5
+                              op      op/s
+ 253 bits ecdh (X25519)   0.0000s  33480.4
+                               keygen    encaps    decaps keygens/s  encaps/s  decaps/s
+                    rsa3072 0.182727s 0.000034s 0.001537s       5.5   29201.5     650.8
+                               keygen     signs    verify keygens/s    sign/s  verify/s
+                    rsa3072 0.142667s 0.001544s 0.000032s       7.0     647.7   31474.0
+
+==== Signatures: ML-DSA vs ECDSA P-256 vs Ed25519 (2s per test) ====
+
+$ openssl speed -seconds 2 -signature-algorithms ML-DSA-44 ML-DSA-65 ML-DSA-87
+                               keygen     signs    verify keygens/s    sign/s  verify/s
+                  ML-DSA-44 0.000116s 0.000666s 0.000129s    8584.8    1501.5    7761.0
+                  ML-DSA-65 0.000200s 0.001017s 0.000198s    5001.0     982.9    5060.3
+                  ML-DSA-87 0.000292s 0.001236s 0.000324s    3429.6     809.0    3082.5
+
+$ openssl speed -seconds 2 ecdsap256 ed25519
+                              sign    verify    sign/s verify/s
+ 256 bits ecdsa (nistp256)   0.0000s   0.0001s  45824.5  16110.1
+                              sign    verify    sign/s verify/s
+ 253 bits EdDSA (Ed25519)   0.0000s   0.0001s  25281.9   9400.5

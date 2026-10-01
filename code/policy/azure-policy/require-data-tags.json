@@ -1,0 +1,53 @@
+{
+  "properties": {
+    "displayName": "Require a valid data-classification tag and a data-owner tag",
+    "policyType": "Custom",
+    "mode": "Indexed",
+    "description": "Denies resources created without data-classification (public, internal, confidential, restricted) or without data-owner. Assign at the scope of data-bearing subscriptions or resource groups.",
+    "metadata": {
+      "category": "Tags",
+      "version": "1.0.0"
+    },
+    "parameters": {
+      "effect": {
+        "type": "String",
+        "allowedValues": [
+          "Audit",
+          "Deny",
+          "Disabled"
+        ],
+        "defaultValue": "Deny"
+      },
+      "allowedClassifications": {
+        "type": "Array",
+        "defaultValue": [
+          "public",
+          "internal",
+          "confidential",
+          "restricted"
+        ]
+      }
+    },
+    "policyRule": {
+      "if": {
+        "anyOf": [
+          {
+            "field": "tags['data-classification']",
+            "exists": "false"
+          },
+          {
+            "field": "tags['data-classification']",
+            "notIn": "[parameters('allowedClassifications')]"
+          },
+          {
+            "field": "tags['data-owner']",
+            "exists": "false"
+          }
+        ]
+      },
+      "then": {
+        "effect": "[parameters('effect')]"
+      }
+    }
+  }
+}

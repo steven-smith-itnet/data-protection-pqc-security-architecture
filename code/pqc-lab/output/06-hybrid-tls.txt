@@ -1,0 +1,71 @@
+# Captured: 2026-09-30T22:25:08Z on Linux 7.0.0-31-generic, OpenSSL 3.5.5 27 Jan 2026 (Library: OpenSSL 3.5.5 27 Jan 2026)
+
+==== Hybrid PQ: X25519MLKEM768 key exchange, ML-DSA-65 server certificate ====
+
+$ openssl s_server -accept 14433 -cert srv.crt -key srv.key -tls1_3 -groups X25519MLKEM768 -www -quiet &
+$ echo Q | openssl s_client -connect localhost:14433 -tls1_3 -groups X25519MLKEM768 -CAfile srv.crt -servername localhost -msg
+  (handshake messages)
+    >>> TLS 1.3, Handshake [length 0587], ClientHello
+    <<< TLS 1.3, Handshake [length 04ba], ServerHello
+  (negotiated parameters)
+    Negotiated TLS1.3 group: X25519MLKEM768
+    New, TLSv1.3, Cipher is TLS_AES_256_GCM_SHA384
+    Peer signature type: mldsa65
+    Server public key is 15616 bit
+    SSL handshake has read 10229 bytes and written 1500 bytes
+    Verification: OK
+
+==== Classical comparison: X25519 key exchange, ML-DSA-65 server certificate ====
+
+$ openssl s_server -accept 14433 -cert srv.crt -key srv.key -tls1_3 -groups X25519 -www -quiet &
+$ echo Q | openssl s_client -connect localhost:14433 -tls1_3 -groups X25519 -CAfile srv.crt -servername localhost -msg
+  (handshake messages)
+    >>> TLS 1.3, Handshake [length 00ef], ClientHello
+    <<< TLS 1.3, Handshake [length 007a], ServerHello
+  (negotiated parameters)
+    New, TLSv1.3, Cipher is TLS_AES_256_GCM_SHA384
+    Peer signature type: mldsa65
+    Peer Temp Key: X25519, 253 bits
+    Server public key is 15616 bit
+    SSL handshake has read 9141 bytes and written 324 bytes
+    Verification: OK
+
+==== Most common near-term deployment: X25519MLKEM768 with an ECDSA P-256 certificate ====
+
+$ openssl s_server -accept 14433 -cert srv-ec.crt -key srv-ec.key -tls1_3 -groups X25519MLKEM768:X25519 -www -quiet &
+$ echo Q | openssl s_client -connect localhost:14433 -tls1_3 -groups X25519MLKEM768:X25519 -CAfile srv-ec.crt -servername localhost -msg
+  (handshake messages)
+    >>> TLS 1.3, Handshake [length 0591], ClientHello
+    <<< TLS 1.3, Handshake [length 04ba], ServerHello
+  (negotiated parameters)
+    Negotiated TLS1.3 group: X25519MLKEM768
+    New, TLSv1.3, Cipher is TLS_AES_256_GCM_SHA384
+    Peer signature type: ecdsa_secp256r1_sha256
+    Peer signing digest: SHA256
+    Server public key is 256 bit
+    SSL handshake has read 1867 bytes and written 1510 bytes
+    Verification: OK
+
+==== Fallback: client offers hybrid then X25519, server supports only X25519 ====
+
+$ openssl s_server -accept 14433 -cert srv-ec.crt -key srv-ec.key -tls1_3 -groups X25519 -www -quiet &
+$ echo Q | openssl s_client -connect localhost:14433 -tls1_3 -groups X25519MLKEM768:X25519 -CAfile srv-ec.crt -servername localhost -msg
+  (handshake messages)
+    >>> TLS 1.3, Handshake [length 0591], ClientHello
+    <<< TLS 1.3, Handshake [length 0058], ServerHello
+    >>> TLS 1.3, Handshake [length 00f1], ClientHello
+    <<< TLS 1.3, Handshake [length 007a], ServerHello
+  (negotiated parameters)
+    New, TLSv1.3, Cipher is TLS_AES_256_GCM_SHA384
+    Peer signature type: ecdsa_secp256r1_sha256
+    Peer signing digest: SHA256
+    Peer Temp Key: X25519, 253 bits
+    Server public key is 256 bit
+    SSL handshake has read 872 bytes and written 1756 bytes
+    Verification: OK
+
+==== ClientHello and ServerHello sizes: hybrid vs classical key share ====
+group             ClientHello bytes  ServerHello bytes
+X25519                          239                122
+X25519MLKEM768                 1415               1210
+Sizes are handshake message bodies as reported by s_client -msg (record headers excluded).

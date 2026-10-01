@@ -1,0 +1,12 @@
+{
+  "export": "synthetic payment capture test file (well-known public test card numbers only)",
+  "transactions": [
+    {"txn_id": "T-1001", "card_number": "4111111111111111", "amount": "120.00", "currency": "USD"},
+    {"txn_id": "T-1002", "card_number": "5555 5555 5555 4444", "amount": "89.50", "currency": "EUR"},
+    {"txn_id": "T-1003", "card_number": "3782-822463-10005", "amount": "310.00", "currency": "GBP"},
+    {"txn_id": "T-1004", "card_number": "6011111111111117", "amount": "45.00", "currency": "USD"},
+    {"txn_id": "T-1005", "folio_reference": "4111111111111112", "note": "16 digits, fails Luhn, must not be reported"},
+    {"txn_id": "T-1006", "order_number": "1234567890123456", "note": "no issuer prefix, must not be reported"}
+  ],
+  "guest_contact": "payments.team@example.com"
+}

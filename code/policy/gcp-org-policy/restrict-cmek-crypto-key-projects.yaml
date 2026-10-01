@@ -1,0 +1,9 @@
+# CMEK keys may only come from the central key management project, so key
+# administration stays separate from the projects that use the keys.
+# Replace FOLDER_ID and KMS_PROJECT_ID before use.
+name: folders/FOLDER_ID/policies/gcp.restrictCmekCryptoKeyProjects
+spec:
+  rules:
+    - values:
+        allowedValues:
+          - under:projects/KMS_PROJECT_ID

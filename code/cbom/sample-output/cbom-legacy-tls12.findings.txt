@@ -1,0 +1,5 @@
+[medium] 127.0.0.1:14436 TLS 1.2: TLS 1.3 not negotiated.
+[high] 127.0.0.1:14436 X25519: Classical key exchange: recorded sessions are exposed to harvest now, decrypt later.
+[medium] 127.0.0.1:14436 rsa_pss_rsae_sha256: Quantum-vulnerable signature (RSA) used for TLS handshake signature.
+[high] 127.0.0.1:14436 sha256WithRSAEncryption: Quantum-vulnerable signature (RSA) used for certificate signature.
+[high] 127.0.0.1:14436 X25519MLKEM768: Offered only X25519MLKEM768; endpoint negotiated DH instead.

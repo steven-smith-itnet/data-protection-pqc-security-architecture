@@ -1,0 +1,50 @@
+# Captured: 2026-09-30T22:25:08Z on Linux 7.0.0-31-generic, OpenSSL 3.5.5 27 Jan 2026 (Library: OpenSSL 3.5.5 27 Jan 2026)
+
+==== Self-signed ML-DSA-65 certificate (lab root, 30 days) ====
+
+$ openssl req -x509 -new -newkey ML-DSA-65 -nodes -keyout lab-root.key -out lab-root.crt -days 30 -subj '/O=Example Hospitality Lab/CN=PQC Lab Root ML-DSA-65' -addext basicConstraints=critical,CA:TRUE -addext keyUsage=critical,keyCertSign,cRLSign
+-----
+
+==== Inspect the certificate (public key hex trimmed) ====
+
+$ openssl x509 -in lab-root.crt -noout -text | (trimmed)
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number:
+            27:d0:4e:cf:72:94:e2:ad:7f:c6:99:c8:87:d4:6f:c6:ad:dc:41:a4
+        Signature Algorithm: ML-DSA-65
+        Issuer: O=Example Hospitality Lab, CN=PQC Lab Root ML-DSA-65
+        Validity
+            Not Before: Sep 30 22:25:08 2026 GMT
+            Not After : Oct 30 22:25:08 2026 GMT
+        Subject: O=Example Hospitality Lab, CN=PQC Lab Root ML-DSA-65
+        Subject Public Key Info:
+            Public Key Algorithm: ML-DSA-65
+                ML-DSA-65 Public-Key:
+                pub:
+                    86:7d:0f:0b:71:e4:7a:69:ea:08:d7:97:e6:8b:e5:
+                ... (public key bytes trimmed) ...
+        X509v3 extensions:
+            X509v3 Subject Key Identifier:
+                27:AA:E5:D2:41:1E:17:F5:1D:F8:10:9B:3E:E6:79:A9:21:1D:3B:18
+            X509v3 Authority Key Identifier:
+                27:AA:E5:D2:41:1E:17:F5:1D:F8:10:9B:3E:E6:79:A9:21:1D:3B:18
+            X509v3 Basic Constraints: critical
+                CA:TRUE
+            X509v3 Key Usage: critical
+                Certificate Sign, CRL Sign
+    Signature Algorithm: ML-DSA-65
+    Signature Value:
+        f7:3e:1c:be:7c:d5:ec:57:62:df:82:62:27:d3:b8:8f:3c:3d:
+        ... (signature bytes trimmed) ...
+
+==== Verify the self-signature ====
+
+$ openssl verify -CAfile lab-root.crt lab-root.crt
+lab-root.crt: OK
+
+==== Certificate size comparison (DER bytes) ====
+ECDSA P-256 cert          482 bytes
+RSA-3072 cert            1129 bytes
+ML-DSA-65 cert           5620 bytes

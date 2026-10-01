@@ -1,0 +1,15 @@
+# Services listed in deniedValues must be created with CMEK. Apply at the
+# folder that holds confidential and restricted workloads (pp2 and pp3).
+#   gcloud org-policies set-policy restrict-non-cmek-services.yaml
+# Replace FOLDER_ID before use.
+name: folders/FOLDER_ID/policies/gcp.restrictNonCmekServices
+spec:
+  rules:
+    - values:
+        deniedValues:
+          - storage.googleapis.com
+          - bigquery.googleapis.com
+          - sqladmin.googleapis.com
+          - spanner.googleapis.com
+          - compute.googleapis.com
+          - pubsub.googleapis.com

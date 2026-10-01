@@ -1,0 +1,198 @@
+{
+  "scanner": "pii_scanner",
+  "version": "1.0.0",
+  "scanned_at": "2026-09-30T22:45:25+00:00",
+  "root": "samples",
+  "jurisdictions": [
+    "gdpr"
+  ],
+  "summary": {
+    "files_scanned": 4,
+    "files_by_tier": {
+      "C1": 1,
+      "C3": 3
+    }
+  },
+  "files": [
+    {
+      "path": "samples/front_desk_notes.txt",
+      "bytes_scanned": 598,
+      "truncated": false,
+      "findings": {
+        "email": {
+          "count": 1,
+          "confidence": "high",
+          "samples": [
+            "d***@example.com"
+          ]
+        },
+        "iban": {
+          "count": 2,
+          "confidence": "high",
+          "samples": [
+            "GB****************5432",
+            "DE****************3000"
+          ]
+        },
+        "passport": {
+          "count": 1,
+          "confidence": "low",
+          "samples": [
+            "*******04"
+          ]
+        },
+        "phone": {
+          "count": 1,
+          "confidence": "medium",
+          "samples": [
+            "+1*******104"
+          ]
+        },
+        "ssn": {
+          "count": 1,
+          "confidence": "high",
+          "samples": [
+            "***-**-6789"
+          ]
+        }
+      },
+      "recommendation": {
+        "tier": "C3",
+        "label": "Restricted\\Guest-Identity",
+        "protection_profile": "pp3",
+        "rationale": "Tier C3 is driven by: iban, passport, ssn. Tier C3 maps to pp3.",
+        "needs_review": false,
+        "tags": {
+          "data-classification": "restricted",
+          "protection-profile": "pp3",
+          "data-domain": "finance",
+          "regulatory-scope": "gdpr"
+        }
+      }
+    },
+    {
+      "path": "samples/guest_profiles.csv",
+      "bytes_scanned": 431,
+      "truncated": false,
+      "findings": {
+        "dob": {
+          "count": 3,
+          "confidence": "medium",
+          "samples": [
+            "****-**-**",
+            "**/**/****"
+          ]
+        },
+        "email": {
+          "count": 3,
+          "confidence": "high",
+          "samples": [
+            "a***@example.com",
+            "b***@example.org",
+            "c***@example.net"
+          ]
+        },
+        "loyalty": {
+          "count": 3,
+          "confidence": "medium",
+          "samples": [
+            "********0001",
+            "********0002",
+            "********0003"
+          ]
+        },
+        "passport": {
+          "count": 3,
+          "confidence": "low",
+          "samples": [
+            "*******01",
+            "*******02",
+            "*******03"
+          ]
+        },
+        "phone": {
+          "count": 3,
+          "confidence": "medium",
+          "samples": [
+            "+1*******101",
+            "+4********102",
+            "+3*******103"
+          ]
+        }
+      },
+      "recommendation": {
+        "tier": "C3",
+        "label": "Restricted\\Guest-Identity",
+        "protection_profile": "pp3",
+        "rationale": "Tier C3 is driven by: passport. Tier C3 maps to pp3. Every finding at this tier is low confidence; route to the data owner for review before applying the label.",
+        "needs_review": true,
+        "tags": {
+          "data-classification": "restricted",
+          "protection-profile": "pp3",
+          "data-domain": "guest",
+          "regulatory-scope": "gdpr"
+        }
+      }
+    },
+    {
+      "path": "samples/payment_capture.json",
+      "bytes_scanned": 803,
+      "truncated": false,
+      "findings": {
+        "email": {
+          "count": 1,
+          "confidence": "high",
+          "samples": [
+            "p***@example.com"
+          ]
+        },
+        "pan": {
+          "count": 4,
+          "confidence": "high",
+          "samples": [
+            "411111******1111",
+            "555555******4444",
+            "378282*****0005"
+          ],
+          "brands": {
+            "visa": 1,
+            "mastercard": 1,
+            "amex": 1,
+            "discover": 1
+          }
+        }
+      },
+      "recommendation": {
+        "tier": "C3",
+        "label": "Restricted\\PCI",
+        "protection_profile": "pp3",
+        "rationale": "Tier C3 is driven by: pan. Tier C3 maps to pp3.",
+        "needs_review": false,
+        "tags": {
+          "data-classification": "restricted",
+          "protection-profile": "pp3",
+          "data-domain": "payment",
+          "regulatory-scope": "pci_gdpr"
+        }
+      }
+    },
+    {
+      "path": "samples/published_rates.txt",
+      "bytes_scanned": 213,
+      "truncated": false,
+      "findings": {},
+      "recommendation": {
+        "tier": "C1",
+        "label": "Internal",
+        "protection_profile": "pp1",
+        "rationale": "No sensitive data types detected. Default to Internal until the data owner confirms; Public (C0) requires an explicit owner decision.",
+        "needs_review": false,
+        "tags": {
+          "data-classification": "internal",
+          "protection-profile": "pp1",
+          "regulatory-scope": "none"
+        }
+      }
+    }
+  ]
+}

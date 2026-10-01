@@ -1,0 +1,5 @@
+# Require uniform bucket-level access (IAM only, no object ACLs).
+name: organizations/ORG_ID/policies/storage.uniformBucketLevelAccess
+spec:
+  rules:
+    - enforce: true

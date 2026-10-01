@@ -1,0 +1,10 @@
+Front desk shift notes (synthetic test data, fictional identities)
+
+Guest Test Guest Delta checked in to room 1204. Passport no. X00000004 recorded at check-in per local
+registration rules. Contact: delta.guest@example.com, +1 202 555 0104.
+
+Refund to be sent by bank transfer to IBAN GB82 WEST 1234 5698 7654 32 (standard documentation
+example IBAN). Second account on file: DE89370400440532013000.
+
+Employee onboarding form for Sample Employee: SSN 123-45-6789 (widely published example number).
+Rejected test values that must not be reported: 000-12-3456, 666-12-3456, 900-12-3456, 078-05-1120.

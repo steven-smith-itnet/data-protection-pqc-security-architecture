@@ -1,0 +1,2 @@
+[medium] 127.0.0.1:14433 ecdsa_secp256r1_sha256: Quantum-vulnerable signature (ECDSA) used for TLS handshake signature.
+[medium] 127.0.0.1:14433 ecdsa-with-SHA256: Quantum-vulnerable signature (ECDSA) used for certificate signature.

@@ -1,0 +1,4 @@
+guest_id,full_name,email,phone,date_of_birth,passport_number,loyalty_number,preferred_room
+G-0001,Test Guest Alpha,alpha.guest@example.com,+1 202 555 0101,1980-01-01,X00000001,LOY000000001,king non-smoking
+G-0002,Test Guest Bravo,bravo.guest@example.org,+44 20 7946 0102,02/02/1975,X00000002,LOY000000002,twin high floor
+G-0003,Test Guest Charlie,charlie.guest@example.net,+33 1 99 00 01 03,1990-03-03,X00000003,LOY000000003,suite

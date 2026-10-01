@@ -1,0 +1,5 @@
+# Enforce public access prevention on all Cloud Storage buckets.
+name: organizations/ORG_ID/policies/storage.publicAccessPrevention
+spec:
+  rules:
+    - enforce: true

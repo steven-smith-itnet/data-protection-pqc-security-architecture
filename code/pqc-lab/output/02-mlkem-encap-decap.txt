@@ -1,0 +1,39 @@
+# Captured: 2026-09-30T22:25:06Z on Linux 7.0.0-31-generic, OpenSSL 3.5.5 27 Jan 2026 (Library: OpenSSL 3.5.5 27 Jan 2026)
+
+==== Generate an ML-KEM-768 key pair (throwaway, in a temp dir) ====
+
+$ openssl genpkey -algorithm ML-KEM-768 -out mlkem768.key
+
+$ openssl pkey -in mlkem768.key -pubout -out mlkem768.pub
+
+$ openssl pkey -pubin -in mlkem768.pub -text -noout   (first lines only)
+ML-KEM-768 Public-Key:
+ek:
+    d5:87:c5:e0:e7:c2:9a:e4:69:e9:d0:be:89:7c:6e:
+    ec:40:7a:b7:c1:0a:41:f2:59:12:44:08:18:46:c5:
+    ... (81 lines in total; encapsulation key trimmed) ...
+
+==== Sender: encapsulate to the public key ====
+
+$ openssl pkeyutl -encap -pubin -inkey mlkem768.pub -out ct.bin -secret ss_sender.bin
+
+==== Receiver: decapsulate the ciphertext with the private key ====
+
+$ openssl pkeyutl -decap -inkey mlkem768.key -in ct.bin -out ss_receiver.bin
+
+==== Sizes (bytes) ====
+ciphertext        1088
+sender secret     32
+receiver secret   32
+public key (DER)  1206
+
+==== Compare shared secrets ====
+sender   : 06f09086c2982b80c4e3b2cead387c834f3f1a5cb70b3ec3f62ff01423e206c8
+receiver : 06f09086c2982b80c4e3b2cead387c834f3f1a5cb70b3ec3f62ff01423e206c8
+RESULT: shared secrets MATCH
+
+==== Negative test: decapsulate a ciphertext with one flipped byte ====
+
+$ openssl pkeyutl -decap -inkey mlkem768.key -in ct_tampered.bin -out ss_tampered.bin
+tampered : b552af8b64816df89aa5407e76db2a7968b5638fcbba7dd4ae1b7f344baabab0
+RESULT: tampered ciphertext yields an unrelated secret (implicit rejection); no error is raised

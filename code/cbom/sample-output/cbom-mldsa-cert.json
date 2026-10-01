@@ -1,0 +1,306 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:96da3d06-8b6c-470b-a49e-584598f58ef4",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-09-30T22:32:52+00:00",
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "name": "cbom_scan",
+          "version": "1.0.0",
+          "description": "TLS and certificate CBOM scanner using OpenSSL 3.5.5 27 Jan 2026 (Library: OpenSSL 3.5.5 27 Jan 2026)"
+        }
+      ]
+    },
+    "properties": [
+      {
+        "name": "cbom:quantum-vulnerable-assets",
+        "value": "none"
+      },
+      {
+        "name": "cbom:finding-count",
+        "value": "0"
+      }
+    ]
+  },
+  "components": [
+    {
+      "type": "cryptographic-asset",
+      "name": "AES-256-GCM",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "ae",
+          "executionEnvironment": "software-plain-ram",
+          "mode": "gcm",
+          "cryptoFunctions": [
+            "encrypt",
+            "decrypt"
+          ],
+          "classicalSecurityLevel": 256,
+          "nistQuantumSecurityLevel": 5
+        }
+      },
+      "properties": [
+        {
+          "name": "cbom:quantum-vulnerable",
+          "value": "false"
+        }
+      ],
+      "bom-ref": "crypto/algorithm/AES-256-GCM"
+    },
+    {
+      "type": "cryptographic-asset",
+      "name": "SHA-384",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "hash",
+          "executionEnvironment": "software-plain-ram",
+          "cryptoFunctions": [
+            "digest"
+          ],
+          "classicalSecurityLevel": 192,
+          "nistQuantumSecurityLevel": 4
+        }
+      },
+      "properties": [
+        {
+          "name": "cbom:quantum-vulnerable",
+          "value": "false"
+        }
+      ],
+      "bom-ref": "crypto/algorithm/SHA-384"
+    },
+    {
+      "type": "cryptographic-asset",
+      "name": "X25519MLKEM768",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "kem",
+          "executionEnvironment": "software-plain-ram",
+          "cryptoFunctions": [
+            "keygen",
+            "encapsulate",
+            "decapsulate"
+          ],
+          "classicalSecurityLevel": 128,
+          "nistQuantumSecurityLevel": 3
+        }
+      },
+      "properties": [
+        {
+          "name": "cbom:quantum-vulnerable",
+          "value": "false"
+        },
+        {
+          "name": "cbom:hybrid",
+          "value": "X25519 + ML-KEM-768"
+        },
+        {
+          "name": "cbom:tls-codepoint",
+          "value": "0x11EC"
+        },
+        {
+          "name": "cbom:role",
+          "value": "key-exchange"
+        }
+      ],
+      "bom-ref": "crypto/algorithm/X25519MLKEM768"
+    },
+    {
+      "type": "cryptographic-asset",
+      "name": "mldsa65",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "signature",
+          "executionEnvironment": "software-plain-ram",
+          "cryptoFunctions": [
+            "sign",
+            "verify"
+          ],
+          "nistQuantumSecurityLevel": 3
+        }
+      },
+      "properties": [
+        {
+          "name": "cbom:quantum-vulnerable",
+          "value": "false"
+        },
+        {
+          "name": "cbom:family",
+          "value": "ML-DSA-65"
+        },
+        {
+          "name": "cbom:role",
+          "value": "TLS handshake signature"
+        }
+      ],
+      "bom-ref": "crypto/algorithm/mldsa65"
+    },
+    {
+      "type": "cryptographic-asset",
+      "name": "ML-DSA-65",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "signature",
+          "executionEnvironment": "software-plain-ram",
+          "cryptoFunctions": [
+            "sign",
+            "verify"
+          ],
+          "nistQuantumSecurityLevel": 3
+        },
+        "oid": "2.16.840.1.101.3.4.3.18"
+      },
+      "properties": [
+        {
+          "name": "cbom:quantum-vulnerable",
+          "value": "false"
+        },
+        {
+          "name": "cbom:family",
+          "value": "ML-DSA-65"
+        },
+        {
+          "name": "cbom:role",
+          "value": "certificate signature"
+        }
+      ],
+      "bom-ref": "crypto/algorithm/ML-DSA-65"
+    },
+    {
+      "type": "cryptographic-asset",
+      "name": "public key of CN=pq-gateway.example.test",
+      "cryptoProperties": {
+        "assetType": "related-crypto-material",
+        "relatedCryptoMaterialProperties": {
+          "type": "public-key",
+          "algorithmRef": "crypto/algorithm/ML-DSA-65",
+          "format": "PEM"
+        }
+      },
+      "bom-ref": "crypto/key/7053f7495059d80a"
+    },
+    {
+      "type": "cryptographic-asset",
+      "name": "CN=pq-gateway.example.test",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "subjectName": "CN=pq-gateway.example.test",
+          "issuerName": "CN=pq-gateway.example.test",
+          "notValidBefore": "2026-09-30T22:32:50+00:00",
+          "notValidAfter": "2026-10-30T22:32:50+00:00",
+          "signatureAlgorithmRef": "crypto/algorithm/ML-DSA-65",
+          "subjectPublicKeyRef": "crypto/key/7053f7495059d80a",
+          "certificateFormat": "X.509",
+          "certificateExtension": "pem"
+        }
+      },
+      "properties": [
+        {
+          "name": "cbom:source",
+          "value": "127.0.0.1:14435"
+        },
+        {
+          "name": "cbom:sha256-fingerprint",
+          "value": "70:53:F7:49:50:59:D8:0A:C3:F7:93:A8:66:4B:7A:E4:EB:44:3B:9A:D4:14:CD:4A:BA:66:05:AE:71:55:3A:34"
+        },
+        {
+          "name": "cbom:validity-days",
+          "value": "30"
+        },
+        {
+          "name": "cbom:self-signed",
+          "value": "true"
+        }
+      ],
+      "bom-ref": "crypto/certificate/7053f7495059d80a"
+    },
+    {
+      "type": "cryptographic-asset",
+      "name": "TLS 1.3 at 127.0.0.1:14435",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "tls",
+          "version": "1.3",
+          "cipherSuites": [
+            {
+              "name": "TLS_AES_256_GCM_SHA384",
+              "algorithms": [
+                "crypto/algorithm/AES-256-GCM",
+                "crypto/algorithm/SHA-384"
+              ],
+              "identifiers": [
+                "0x13,0x02"
+              ]
+            }
+          ],
+          "cryptoRefArray": [
+            "crypto/algorithm/X25519MLKEM768",
+            "crypto/algorithm/mldsa65",
+            "crypto/algorithm/AES-256-GCM",
+            "crypto/algorithm/SHA-384",
+            "crypto/certificate/7053f7495059d80a"
+          ]
+        }
+      },
+      "properties": [
+        {
+          "name": "cbom:endpoint",
+          "value": "127.0.0.1:14435"
+        },
+        {
+          "name": "cbom:negotiated-group",
+          "value": "X25519MLKEM768"
+        },
+        {
+          "name": "cbom:hybrid-pq-negotiated",
+          "value": "true"
+        },
+        {
+          "name": "cbom:hybrid-pq-supported",
+          "value": "true"
+        },
+        {
+          "name": "cbom:probe-command",
+          "value": "openssl s_client -connect 127.0.0.1:14435 -showcerts -servername pq-gateway.example.test"
+        }
+      ],
+      "bom-ref": "crypto/protocol/tls/127.0.0.1:14435"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "crypto/certificate/7053f7495059d80a",
+      "dependsOn": [
+        "crypto/algorithm/ML-DSA-65",
+        "crypto/key/7053f7495059d80a"
+      ]
+    },
+    {
+      "ref": "crypto/key/7053f7495059d80a",
+      "dependsOn": [
+        "crypto/algorithm/ML-DSA-65"
+      ]
+    },
+    {
+      "ref": "crypto/protocol/tls/127.0.0.1:14435",
+      "dependsOn": [
+        "crypto/algorithm/AES-256-GCM",
+        "crypto/algorithm/SHA-384",
+        "crypto/algorithm/X25519MLKEM768",
+        "crypto/algorithm/mldsa65",
+        "crypto/certificate/7053f7495059d80a"
+      ]
+    }
+  ]
+}

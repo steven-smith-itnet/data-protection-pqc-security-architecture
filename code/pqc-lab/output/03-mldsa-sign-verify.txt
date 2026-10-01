@@ -1,0 +1,24 @@
+# Captured: 2026-09-30T22:25:06Z on Linux 7.0.0-31-generic, OpenSSL 3.5.5 27 Jan 2026 (Library: OpenSSL 3.5.5 27 Jan 2026)
+
+==== Generate an ML-DSA-65 key pair (throwaway, in a temp dir) ====
+
+$ openssl genpkey -algorithm ML-DSA-65 -out mldsa65.key
+
+$ openssl pkey -in mldsa65.key -pubout -out mldsa65.pub
+
+==== Sign the message (ML-DSA signs the raw message; no separate digest step) ====
+
+$ openssl pkeyutl -sign -rawin -inkey mldsa65.key -in message.txt -out message.sig
+signature bytes: 3309
+
+==== Verify with the public key ====
+
+$ openssl pkeyutl -verify -rawin -pubin -inkey mldsa65.pub -in message.txt -sigfile message.sig
+Signature Verified Successfully
+
+==== Tamper test: change one character of the message and verify again ====
+
+$ openssl pkeyutl -verify -rawin -pubin -inkey mldsa65.pub -in message_tampered.txt -sigfile message.sig
+40B705C8D9710000:error:030000EA:digital envelope routines:EVP_DigestVerify:provider signature failure:../crypto/evp/m_sigver.c:779:ML-DSA-65 digest_verify:
+Signature Verification Failure
+exit code: 1 (non-zero means verification failed, as expected)

@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Data Protection and PQC Briefing</title>
+<meta name="description" content="Executive briefing: phased data protection, encryption, and post-quantum cryptography program for a global hospitality organization.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/black.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/highlight/monokai.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1419; --panel: #17202a; --ink: #e6e9ee; --muted: #9aa5b1;
+    --accent: #5aa9e6; --good: #8d99a6; --better: #5aa9e6; --best: #4cc38a; --warn: #e6a23c;
+    --r-background-color: var(--bg); --r-main-font: "Inter", system-ui, sans-serif;
+    --r-heading-font: "Inter", system-ui, sans-serif; --r-main-color: var(--ink);
+    --r-heading-color: #ffffff; --r-link-color: var(--accent); --r-main-font-size: 30px;
+    --r-heading-text-transform: none; --r-heading-font-weight: 700; --r-code-font: "JetBrains Mono", monospace;
+  }
+  body { background: var(--bg); }
+  .reveal h1 { font-size: 1.9em; } .reveal h2 { font-size: 1.35em; margin-bottom: .5em; }
+  .reveal .kicker { color: var(--accent); font-size: .6em; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; }
+  .reveal .sub { color: var(--muted); font-size: .8em; }
+  .reveal ul { font-size: .78em; line-height: 1.45; } .reveal li { margin: .25em 0; }
+  .reveal table { font-size: .52em; border-collapse: collapse; width: 100%; }
+  .reveal table th { background: var(--panel); color: #fff; font-weight: 600; }
+  .reveal table th, .reveal table td { border: 1px solid #2c3a47 !important; padding: .35em .55em !important; text-align: left; vertical-align: top; }
+  .row { display: flex; gap: .5em; justify-content: center; align-items: stretch; flex-wrap: wrap; margin-top: .6em; }
+  .box { background: var(--panel); border: 1px solid #2c3a47; border-radius: 10px; padding: .5em .7em; font-size: .55em; flex: 1; min-width: 0; text-align: left; }
+  .box b { display: block; color: #fff; font-size: 1.15em; margin-bottom: .25em; }
+  .arrow { align-self: center; color: var(--accent); font-size: .9em; }
+  .good { border-top: 4px solid var(--good); } .better { border-top: 4px solid var(--better); } .best { border-top: 4px solid var(--best); }
+  .warnbox { border-top: 4px solid var(--warn); }
+  .pill { display: inline-block; padding: .05em .5em; border-radius: 999px; font-size: .8em; background: #243240; color: var(--accent); }
+  .big { font-size: 2.4em; font-weight: 700; color: #fff; line-height: 1; }
+  .reveal pre { font-size: .42em; width: 100%; box-shadow: none; }
+  .reveal pre code { background: #0b0f14; border: 1px solid #2c3a47; border-radius: 8px; padding: .8em; max-height: 480px; }
+  .foot { position: fixed; bottom: 12px; left: 16px; font-size: 12px; color: var(--muted); z-index: 10; }
+  .foot a { color: var(--muted); }
+  @media (max-width: 700px) { .row { flex-direction: column; } .arrow { transform: rotate(90deg); } }
+</style>
+</head>
+<body>
+<div class="foot"><a href="../">Back to the full architecture site</a> &middot; arrow keys to navigate, Esc for overview</div>
+<div class="reveal"><div class="slides">
+
+<section>
+  <p class="kicker">Executive briefing</p>
+  <h1>Data protection and post-quantum encryption</h1>
+  <p class="sub">A phased program for a global hospitality organization: inventory, classification, encryption, key management, and the move to post-quantum cryptography across on-prem, AWS, Azure, Google Cloud, and OCI.</p>
+  <p class="sub" style="font-size:.55em">Steven W. Smith &middot; reference architecture</p>
+</section>
+
+<section>
+  <h2>What the organization holds</h2>
+  <table>
+    <tr><th>Data</th><th>Where it lives</th><th>Tier</th></tr>
+    <tr><td>Payment cards (front desk, POS, web, OTA virtual cards)</td><td>Terminals, gateway, PMS, CRS</td><td>C3 Restricted</td></tr>
+    <tr><td>Passport and national ID numbers and scans</td><td>PMS, front-desk scanners, file shares</td><td>C3 Restricted</td></tr>
+    <tr><td>Health, allergy, accessibility data</td><td>Spa, events, guest preferences</td><td>C3 Restricted</td></tr>
+    <tr><td>Guest profiles, stay history, loyalty</td><td>CRS, loyalty, CRM, data lake</td><td>C2 Confidential</td></tr>
+    <tr><td>Employee HR and payroll</td><td>HR SaaS, finance, file shares</td><td>C2 to C3</td></tr>
+    <tr><td>Rooming lists, contracts, exports, CCTV, call recordings</td><td>Email, Microsoft 365, NAS, object storage</td><td>C2 to C3</td></tr>
+  </table>
+  <p class="sub" style="font-size:.55em">Owned, managed, and franchised properties share responsibility for this data under different contracts.</p>
+</section>
+
+<section>
+  <h2>Key objectives</h2>
+  <ul>
+    <li>Know where sensitive data is, structured and unstructured, on-prem and in every cloud</li>
+    <li>Classify and label it so the correct control is applied automatically</li>
+    <li>One cryptographic standard and one key management model with separation of duties</li>
+    <li>Reduce PCI DSS scope with P2PE and tokenization</li>
+    <li>Meet privacy and residency obligations (GDPR, CCPA/CPRA, PIPL, LGPD, DPDP)</li>
+    <li>Protect data in transit and, where it matters, in use</li>
+    <li>Be ready for post-quantum cryptography, with crypto agility built in</li>
+    <li>Give engineering teams paved roads, patterns, and fast design reviews</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Why encryption alone is not enough</h2>
+  <div class="row">
+    <div class="box"><b>Found and labeled</b>A control cannot be applied to data nobody knows exists. Discovery and labeling come first.</div>
+    <div class="box"><b>Keys managed properly</b>If the same people and roles hold the data and the keys, encryption limits nothing.</div>
+    <div class="box"><b>Algorithms that last</b>Data kept for ten years needs protection that is still strong in ten years.</div>
+  </div>
+  <p class="sub" style="font-size:.6em;margin-top:1em">Transparent disk and database encryption protect against stolen media. They do not protect against a compromised application, an over-privileged administrator, or SQL injection.</p>
+</section>
+
+<section>
+  <h2>Prerequisites drive control selection</h2>
+  <div class="row">
+    <div class="box"><b>1. Inventory</b>CMDB, cloud asset inventories, SaaS discovery</div><div class="arrow">&rarr;</div>
+    <div class="box"><b>2. Discover</b>Purview, Macie, Sensitive Data Protection, Data Safe, BigID</div><div class="arrow">&rarr;</div>
+    <div class="box"><b>3. Classify</b>C0 Public to C3 Restricted, owner assigned</div><div class="arrow">&rarr;</div>
+    <div class="box"><b>4. Label and tag</b>Sensitivity labels, column tags, resource tags</div><div class="arrow">&rarr;</div>
+    <div class="box"><b>5. Enforce</b>Policy as code selects PP-1, PP-2, or PP-3</div>
+  </div>
+  <p class="sub" style="font-size:.6em;margin-top:1em">A cryptographic inventory (CBOM) runs alongside: it is required by PCI DSS 12.3.3 and it is step one of the PQC migration.</p>
+</section>
+
+<section>
+  <h2>Classification and labels</h2>
+  <table>
+    <tr><th>Tier</th><th>Label</th><th>Profile</th><th>Examples</th></tr>
+    <tr><td>C0</td><td>Public</td><td>PP-1</td><td>Published rates, property descriptions</td></tr>
+    <tr><td>C1</td><td>Internal</td><td>PP-1</td><td>Procedures, operational metrics</td></tr>
+    <tr><td>C2</td><td>Confidential\Guest-PII, \Employee, \Business</td><td>PP-2</td><td>Guest contact data, stay history, loyalty, contracts</td></tr>
+    <tr><td>C3</td><td>Restricted\PCI, \Guest-Identity, \Special-Category, \Secrets</td><td>PP-3</td><td>PAN, passports, health data, biometrics, keys</td></tr>
+  </table>
+  <p class="sub" style="font-size:.55em">Resource tag schema used in all four clouds: <code>data-classification</code>, <code>protection-profile</code>, <code>data-domain</code>, <code>regulatory-scope</code>, <code>data-residency</code>, <code>data-owner</code>, <code>retention-class</code>.</p>
+</section>
+
+<section>
+  <h2>Good, Better, Best</h2>
+  <div class="row">
+    <div class="box good"><b>Good: PP-1 Baseline</b>Provider-managed keys, default encryption at rest, TLS 1.2 or later, standard IAM, audit logging.<br><br><span class="pill">Public, Internal</span></div>
+    <div class="box better"><b>Better: PP-2 Enhanced</b>Customer-managed keys per data domain, rotation, key admin and key user separation, TDE with CMK, dynamic masking, DLP, hybrid PQ TLS where offered.<br><br><span class="pill">Confidential</span></div>
+    <div class="box best"><b>Best: PP-3 Maximum</b>Field-level encryption or tokenization in the application, single-tenant HSM or external keys where justified, persistent file encryption, mTLS, confidential computing, crypto-shredding.<br><br><span class="pill">Restricted</span></div>
+  </div>
+  <p class="sub" style="font-size:.55em;margin-top:.8em">Best is not always right: external keys add outage risk, and field-level encryption breaks search and joins. Each choice is justified by the data tier.</p>
+</section>
+
+<section>
+  <h2>Structured data: the layer stack</h2>
+  <table>
+    <tr><th>Layer</th><th>Stops</th><th>Does not stop</th></tr>
+    <tr><td>Disk, volume, SED</td><td>Stolen drives, decommissioned media</td><td>Anyone with OS or database access</td></tr>
+    <tr><td>Database TDE with CMK</td><td>Stolen files and backups; key revocation</td><td>DBAs, SQL injection, compromised app</td></tr>
+    <tr><td>Column encryption, Always Encrypted</td><td>DBAs and platform operators</td><td>Compromised application with key access</td></tr>
+    <tr><td>Application field-level encryption</td><td>Database, storage, and log exposure</td><td>Compromised application runtime</td></tr>
+    <tr><td>Tokenization, FPE</td><td>Removes the real value from most systems; PCI scope reduction</td><td>Abuse of detokenization rights</td></tr>
+    <tr><td>Dynamic masking, row policies</td><td>Over-exposure to analysts and support staff</td><td>Privileged bypass (not encryption)</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>Unstructured data: protection that travels</h2>
+  <div class="row">
+    <div class="box"><b>Storage-bound</b>S3, Blob, GCS, OCI Object Storage, NAS encryption with CMK. Protection ends when the file is downloaded.</div>
+    <div class="box"><b>Persistent</b>Purview sensitivity labels with encryption, rights management, DKE for the most sensitive. Protection stays with the file.</div>
+    <div class="box"><b>Enforced</b>Auto-labeling, DLP keyed on labels and sensitive information types, CASB for SaaS, bucket policies that reject the wrong key.</div>
+  </div>
+  <p class="sub" style="font-size:.6em;margin-top:1em">Hospitality targets: front-desk ID scans, rooming lists in Excel, PMS exports, event contracts, CCTV, call recordings.</p>
+</section>
+
+<section>
+  <h2>Payment data: remove it, do not only encrypt it</h2>
+  <div class="row">
+    <div class="box"><b>Card present</b>P2PE terminals at front desk and POS; the property never sees clear PAN.</div><div class="arrow">&rarr;</div>
+    <div class="box"><b>Gateway token</b>PMS and CRS store tokens for incidentals, no-shows, and card on file.</div><div class="arrow">&rarr;</div>
+    <div class="box"><b>Card not present</b>Hosted fields and iframes for web and app; network tokens; OTA virtual cards handled by the gateway.</div>
+  </div>
+  <ul style="font-size:.6em;margin-top:.8em">
+    <li>PCI DSS v4.0.1 3.5.1.2: disk-level encryption alone is no longer enough for PAN outside removable media</li>
+    <li>3.5.1.1: hashes of PAN must be keyed. 12.3.3: cipher suites and protocols reviewed every 12 months</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Key management and custody</h2>
+  <table>
+    <tr><th>Model</th><th>AWS</th><th>Azure</th><th>Google Cloud</th><th>OCI</th></tr>
+    <tr><td>Provider-managed</td><td>AWS owned / managed keys</td><td>Microsoft-managed keys</td><td>Google default encryption</td><td>Oracle-managed keys</td></tr>
+    <tr><td>Customer-managed</td><td>KMS customer managed key</td><td>Key Vault (Premium HSM keys)</td><td>Cloud KMS CMEK</td><td>Vault master encryption key</td></tr>
+    <tr><td>Single-tenant HSM</td><td>CloudHSM, custom key store</td><td>Managed HSM</td><td>Cloud HSM</td><td>Dedicated KMS</td></tr>
+    <tr><td>Externally held</td><td>External key store (XKS)</td><td>DKE (M365), HYOK patterns</td><td>Cloud EKM</td><td>External KMS</td></tr>
+  </table>
+  <p class="sub" style="font-size:.55em">Envelope encryption everywhere: a data key per object or record, wrapped by a key-encryption key that never leaves the HSM boundary. Re-wrapping keys is cheap; re-encrypting data is not.</p>
+</section>
+
+<section>
+  <h2>Transit and in use</h2>
+  <ul>
+    <li>TLS 1.3 by default, TLS 1.2 allowed with an approved cipher list, nothing older</li>
+    <li>mTLS between services through a service mesh; SPIFFE workload identities</li>
+    <li>Database connections require verified TLS; property-to-cloud links encrypted end to end</li>
+    <li>Public certificate lifetime falls to 200 days (March 2026), 100 days (2027), 47 days (2029): certificate automation is mandatory</li>
+    <li>Confidential computing (Nitro Enclaves, SEV-SNP, TDX) for payment and partner analytics workloads that justify it</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Why post-quantum now</h2>
+  <div class="row">
+    <div class="box warnbox"><b>Harvest now, decrypt later</b>Traffic recorded today can be decrypted once a cryptographically relevant quantum computer exists.</div>
+    <div class="box warnbox"><b>Mosca's inequality</b>If data shelf life plus migration time exceeds time to a quantum computer, the migration is already late.</div>
+    <div class="box warnbox"><b>Long-lived hardware</b>Door locks, terminals, and HSMs installed now may still run in 2035.</div>
+  </div>
+  <p class="sub" style="font-size:.6em;margin-top:1em">Shor's algorithm breaks RSA, DH, ECDH, and ECDSA. AES-256 and SHA-384 remain appropriate.</p>
+</section>
+
+<section>
+  <h2>Standards and deadlines</h2>
+  <table>
+    <tr><th>Item</th><th>Status</th></tr>
+    <tr><td>FIPS 203 ML-KEM, FIPS 204 ML-DSA, FIPS 205 SLH-DSA</td><td>Published August 13, 2024</td></tr>
+    <tr><td>HQC (backup KEM), FN-DSA (FIPS 206)</td><td>Selected March 2025; drafts in progress</td></tr>
+    <tr><td>NIST IR 8547 (draft)</td><td>112-bit RSA/ECC deprecated after 2030, all RSA/ECC disallowed after 2035</td></tr>
+    <tr><td>NSA CNSA 2.0</td><td>National security systems transition complete by 2035</td></tr>
+    <tr><td>EU coordinated roadmap</td><td>Start by end of 2026, high-risk by 2030, as feasible by 2035</td></tr>
+    <tr><td>UK NCSC</td><td>Discovery by 2028, priority migration by 2031, complete by 2035</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>PQC migration sequence</h2>
+  <div class="row">
+    <div class="box"><b>1. Inventory</b>CBOM of algorithms, certificates, keys, libraries, HSMs</div><div class="arrow">&rarr;</div>
+    <div class="box"><b>2. Prioritize</b>Shelf life, exposure, replacement difficulty</div><div class="arrow">&rarr;</div>
+    <div class="box"><b>3. Hybrid key exchange</b>X25519MLKEM768 at edges, gateways, mesh</div><div class="arrow">&rarr;</div>
+    <div class="box"><b>4. Signatures and PKI</b>ML-DSA, SLH-DSA, LMS for firmware and roots</div><div class="arrow">&rarr;</div>
+    <div class="box"><b>5. Complete</b>Remaining RSA/ECC retired by 2035</div>
+  </div>
+  <p class="sub" style="font-size:.6em;margin-top:1em">Crypto agility is the design principle: algorithm identifiers stored with ciphertext, central TLS termination, short-lived certificates, and a crypto provider abstraction in code.</p>
+</section>
+
+<section>
+  <h2>Proof: hybrid PQ TLS on OpenSSL 3.5</h2>
+<pre><code class="language-bash" data-trim>
+# Server offers only the hybrid group
+openssl s_server -accept 8443 -cert cert.pem -key key.pem \
+  -tls1_3 -groups X25519MLKEM768 -www
+
+# Client requests it and reports the negotiated group
+openssl s_client -connect localhost:8443 -tls1_3 \
+  -groups X25519MLKEM768 -brief &lt;/dev/null
+</code></pre>
+  <p class="sub" style="font-size:.55em">The full lab runs ML-KEM encapsulation, ML-DSA and SLH-DSA signatures, an ML-DSA certificate, and the hybrid handshake, with captured output. See <a href="../docs/06-pqc/pqc-lab/">Hands-on PQC lab</a>.</p>
+</section>
+
+<section>
+  <h2>Cloud playbooks at a glance</h2>
+  <table>
+    <tr><th></th><th>AWS</th><th>Azure</th><th>Google Cloud</th><th>OCI</th></tr>
+    <tr><td>Discovery</td><td>Macie, Glue detection</td><td>Purview</td><td>Sensitive Data Protection, Dataplex</td><td>Data Safe</td></tr>
+    <tr><td>Guardrails</td><td>SCPs, RCPs, tag policies, Config</td><td>Azure Policy</td><td>Org Policy (restrictNonCmekServices)</td><td>Security Zones, tag defaults</td></tr>
+    <tr><td>Column controls</td><td>Lake Formation LF-tags</td><td>SQL masking, Always Encrypted</td><td>BigQuery policy tags, masking</td><td>Data Redaction, Data Safe masking</td></tr>
+    <tr><td>In use</td><td>Nitro Enclaves</td><td>Confidential VMs, secure key release</td><td>Confidential VMs, Confidential Space</td><td>Confidential computing shapes</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>Enabling engineering teams</h2>
+  <ul>
+    <li><b>Intake by classification:</b> C0 and C1 self-serve; C2 lightweight review; C3 full review with threat model</li>
+    <li><b>Paved roads:</b> Terraform modules that pick the key from tags; approved crypto libraries per language</li>
+    <li><b>Decision trees:</b> which layer, which key custody, tokenize vs encrypt vs mask</li>
+    <li><b>Guardrails:</b> SCPs, Azure Policy, org policies, and OPA checks on Terraform plans</li>
+    <li><b>Encryption design record:</b> a one-page ADR for every C3 system</li>
+    <li><b>Champions and office hours</b> so review is not a bottleneck</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Phased roadmap</h2>
+  <table>
+    <tr><th>Phase</th><th>Name</th><th>Timing</th><th>Exit criterion</th></tr>
+    <tr><td>0</td><td>Mobilize</td><td>Months 0 to 3</td><td>Charter, sponsors, current-state assessment</td></tr>
+    <tr><td>1</td><td>Know the data</td><td>Months 1 to 9</td><td>Crown-jewel stores inventoried, classified, labeled; CBOM baseline</td></tr>
+    <tr><td>2</td><td>Standards and keys</td><td>Months 3 to 12</td><td>Crypto standard published; key hierarchy and guardrails live</td></tr>
+    <tr><td>3</td><td>Structured data</td><td>Months 6 to 24</td><td>All C3 columns tokenized or field-encrypted; CMK on all C2 stores</td></tr>
+    <tr><td>4</td><td>Unstructured data</td><td>Months 6 to 24</td><td>Auto-labeling and DLP in block mode for C3</td></tr>
+    <tr><td>5</td><td>Transit and in use</td><td>Months 9 to 24</td><td>TLS 1.3 default, mTLS in mesh, crypto-shredding for identity data</td></tr>
+    <tr><td>6</td><td>Post-quantum</td><td>Month 6 to 2035</td><td>Hybrid PQ at edges first; RSA/ECC retired by 2035</td></tr>
+    <tr><td>7</td><td>Enable and govern</td><td>Continuous</td><td>Metrics reported to leadership quarterly</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>How progress is measured</h2>
+  <div class="row">
+    <div class="box"><b>Coverage</b>Percent of data stores discovered, classified, and labeled; CMK coverage for C2; field-level coverage for C3</div>
+    <div class="box"><b>Hygiene</b>Rotation compliance, certificate expiry, secret age, keys pending deletion</div>
+    <div class="box"><b>PQC readiness</b>Percent of external TLS endpoints offering hybrid PQ key exchange; percent of CBOM assets with a migration plan</div>
+    <div class="box"><b>Enablement</b>Design review cycle time, paved-road adoption, exceptions open</div>
+  </div>
+</section>
+
+<section>
+  <h1>Full architecture</h1>
+  <p class="sub">Each phase is covered step by step, with the technologies, configuration, and tested code.</p>
+  <p><a href="../">Open the architecture site</a></p>
+  <p class="sub" style="font-size:.5em">Composite scenario for illustration. Not affiliated with any hospitality company, cloud provider, or vendor.</p>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/highlight/highlight.min.js"></script>
+<script>
+  Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade', width: 1280, height: 720, margin: 0.06, plugins: [RevealHighlight] });
+</script>
+</body>
+</html>
